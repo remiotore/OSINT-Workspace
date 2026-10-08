@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,29 +9,1128 @@
 	<title>Threadline — OSINT workspace</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 	<style>
-		:root{--bg:#10131b;--panel:#171b25;--panel2:#1d2230;--line:#2a3040;--text:#e9edf6;--muted:#8b94a8;--faint:#626c81;--accent:#9b8cff;--teal:#65d6c1;--orange:#ffb86b;--red:#ff7d8b;--shadow:0 18px 60px #0008}
-		*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px 'DM Sans',sans-serif;height:100vh;overflow:hidden} button,input,select,textarea{font:inherit}button{color:inherit;cursor:pointer} .app{height:100vh;display:grid;grid-template-rows:66px 1fr;max-width:1800px;margin:auto}
-		.topbar{display:flex;align-items:center;gap:26px;padding:0 24px;border-bottom:1px solid var(--line);background:#12151e;z-index:3}.brand{display:flex;align-items:center;gap:11px;min-width:225px}.brand-mark{width:30px;height:30px;border:1px solid #8676ff88;border-radius:9px;display:grid;place-items:center;color:var(--accent);background:#9181ff12}.brand-mark svg{width:18px}.brand-name{font-weight:700;letter-spacing:-.3px}.brand-sub{color:var(--muted);font-size:11px;margin-top:1px}.workspace-name{height:34px;display:flex;align-items:center;gap:9px;color:#cbd1df;padding:0 12px;border-left:1px solid var(--line);font-size:13px}.live-dot{width:7px;height:7px;background:#68d9a2;border-radius:50%;box-shadow:0 0 8px #68d9a277}.case-select-wrap{position:relative;display:flex;align-items:center}.case-select{height:34px;padding:0 30px 0 12px;border:1px solid var(--line);background:var(--panel);border-radius:7px;color:#e9edf6;outline:none;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9aa4ba 50%),linear-gradient(135deg,#9aa4ba 50%,transparent 50%);background-position:calc(100% - 15px) calc(50% - 2px),calc(100% - 11px) calc(50% - 2px);background-size:4px 4px,4px 4px;background-repeat:no-repeat;font-size:11px;min-width:180px}.case-select:focus{border-color:#8173e9}.layout-select-wrap{margin:0 14px 12px}.layout-select{width:100%;height:34px;padding:0 30px 0 12px;border:1px solid var(--line);background:var(--panel);border-radius:7px;color:#e9edf6;outline:none;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9aa4ba 50%),linear-gradient(135deg,#9aa4ba 50%,transparent 50%);background-position:calc(100% - 15px) calc(50% - 2px),calc(100% - 11px) calc(50% - 2px);background-size:4px 4px,4px 4px;background-repeat:no-repeat;font-size:11px}.layout-select:focus{border-color:#8173e9}.top-spacer{flex:1}.search{width:min(260px,25vw);position:relative}.search input{height:35px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:0 34px;color:var(--text);outline:none}.search input:focus{border-color:#8173e9}.search:before{content:'⌕';position:absolute;left:11px;top:5px;color:var(--muted);font-size:19px}.search input{padding-left:33px}.shortcut{position:absolute;right:8px;top:9px;font:10px 'DM Mono';color:var(--faint)}.top-action{height:35px;border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:0 12px;display:flex;align-items:center;gap:8px;color:#cbd1df;font-size:12px}.top-action:hover,.icon-btn:hover{border-color:#555d70;background:var(--panel2)}.avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#29243e;color:#c2baff;font-size:11px;font-weight:700;border:1px solid #8173e944}
-		.content{min-height:0;display:grid;grid-template-columns:254px minmax(350px,1fr) 310px}.sidebar{background:#141821;border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}.side-head{padding:21px 17px 14px;display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted);font-weight:600}.count{font:11px 'DM Mono';color:var(--muted)}.add-button{height:34px;width:100%;margin:0 14px 17px;width:calc(100% - 28px);border:1px solid #8577ed66;background:#8273e51a;color:#c1b8ff;border-radius:7px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:12px}.add-button:hover{background:#8273e52a}.side-search{margin:0 14px 13px;position:relative}.side-search input{width:100%;height:33px;border-radius:6px;background:#10131b;border:1px solid var(--line);color:var(--text);padding:0 10px 0 30px;outline:none;font-size:12px}.side-search:before{content:'⌕';position:absolute;left:10px;top:5px;color:var(--muted);font-size:18px}.type-list{padding:0 10px 11px;display:flex;gap:5px;flex-wrap:wrap}.type-chip{font-size:10px;border:1px solid var(--line);color:var(--muted);background:transparent;border-radius:20px;padding:5px 8px}.type-chip.active{color:#dedaff;border-color:#766be0;background:#8173e51b}.entity-list{overflow:auto;padding:0 8px 15px}.entity-row{display:flex;align-items:center;gap:10px;padding:9px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}.entity-row:hover{background:#1b202c}.entity-row.selected{background:#24263a;border-color:#514c79}.entity-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex:none}.entity-copy{min-width:0;flex:1}.entity-name{font-size:12px;font-weight:600;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.entity-type{font-size:10px;color:var(--muted);margin-top:3px}.entity-count{font:10px 'DM Mono';color:var(--faint)}.side-footer{margin-top:auto;border-top:1px solid var(--line);padding:12px 15px;color:var(--muted);font-size:10px;display:flex;justify-content:space-between}
-		.main{min-width:0;min-height:0;display:flex;flex-direction:column;background-color:#11141c;background-image:radial-gradient(#343a4a 0.65px,transparent .65px);background-size:19px 19px}.viewbar{height:54px;flex:none;border-bottom:1px solid var(--line);background:#12151ddd;display:flex;align-items:center;padding:0 17px;gap:4px}.view-tab{padding:8px 12px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:12px}.view-tab.active{background:#28253c;color:#d1caff}.view-tab span{margin-right:7px}.view-info{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:11px}.zoom-controls{display:flex;align-items:center;gap:3px}.zoom-level{font:10px 'DM Mono';color:var(--muted);min-width:36px;text-align:center}.legend{display:flex;align-items:center;gap:5px}.legend i{width:7px;height:7px;border-radius:50%;display:inline-block}.canvas-wrap{position:relative;flex:1;min-height:0;overflow:hidden}.graph-svg{width:100%;height:100%;display:block;touch-action:none}.edge{stroke:#626b7f;stroke-width:1.4;opacity:.58}.edge-label{fill:#8f98aa;font:10px 'DM Sans';paint-order:stroke;stroke:#11141c;stroke-width:4px;stroke-linejoin:round}.node.dimmed{opacity:.18}.edge-g.dimmed .edge{opacity:.08}.edge-g.dimmed .edge-label{opacity:.12}.edge-g.highlighted .edge{stroke:#c9beff;stroke-width:2.6;opacity:1}.edge-g.highlighted .edge-label{fill:#e6e0ff;font-weight:600}.node{cursor:pointer}.node-halo{fill:#a59aff;opacity:0;transition:opacity .15s}.node:hover .node-halo,.node.selected .node-halo{opacity:.12}.node-circle{stroke:#11141c;stroke-width:4}.node.selected .node-circle{stroke:#c5bbff;stroke-width:2.5}.node-label{fill:#e2e6ef;font:600 11px 'DM Sans';text-anchor:middle;paint-order:stroke;stroke:#11141c;stroke-width:4px;stroke-linejoin:round;pointer-events:none}.node-sub{fill:#8b94a8;font:9px 'DM Sans';text-anchor:middle;paint-order:stroke;stroke:#11141c;stroke-width:3px;pointer-events:none}.canvas-hint{position:absolute;left:17px;bottom:15px;padding:7px 10px;background:#161a24dd;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:10px}.empty-state{position:absolute;inset:0;display:none;place-items:center;text-align:center;color:var(--muted)}.empty-state.show{display:grid}.empty-state strong{display:block;color:var(--text);margin-bottom:6px}.map-panel{position:absolute;inset:0;display:none;background:#dce4e6}.map-panel.active{display:block}.map-panel #map{width:100%;height:100%}.map-empty{position:absolute;inset:0;display:none;z-index:500;place-items:center;text-align:center;color:#626c81;background:#e8edefdd}.map-empty.show{display:grid}.map-empty strong{display:block;color:#34404a;margin-bottom:5px}.map-caption{position:absolute;z-index:600;left:16px;bottom:16px;padding:8px 10px;border-radius:6px;background:#171b25e8;color:#dbe1ed;font-size:10px}
-		.inspector{border-left:1px solid var(--line);background:#141821;min-width:0;display:flex;flex-direction:column;overflow:auto}.inspector-head{padding:19px 17px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.icon-btn{height:29px;min-width:30px;border:1px solid var(--line);background:#191d28;border-radius:6px;color:var(--muted);display:grid;place-items:center}.detail-hero{padding:20px 17px 15px;border-bottom:1px solid var(--line)}.hero-top{display:flex;align-items:center;gap:12px}.hero-icon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:20px}.hero-title{font-weight:700;font-size:15px;letter-spacing:-.2px;overflow-wrap:anywhere}.hero-type{color:var(--muted);font-size:11px;margin-top:4px}.hero-actions{display:flex;gap:7px;margin-top:16px}.small-button{height:29px;padding:0 9px;border-radius:6px;border:1px solid var(--line);background:#1b202b;color:#bac2d1;font-size:10px}.small-button:hover{border-color:#697287}.small-button.danger{color:#ff9eaa}.section{padding:16px 17px;border-bottom:1px solid var(--line)}.section-title{font-size:10px;text-transform:uppercase;letter-spacing:.9px;font-weight:600;color:#a8b0c1;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.field{margin-bottom:11px}.field:last-child{margin-bottom:0}.field label{display:block;color:var(--muted);font-size:10px;margin-bottom:5px}.field input,.field textarea,.field select{width:100%;border:1px solid transparent;background:#1a1f2b;color:#e1e6f0;border-radius:5px;padding:8px 9px;font-size:11px;outline:none}.field input:focus,.field textarea:focus{border-color:#7168c5}.field textarea{resize:vertical;min-height:58px}.relation-list{display:flex;flex-direction:column;gap:7px}.relation{display:flex;align-items:center;gap:8px;color:#d0d6e2;font-size:11px;cursor:pointer}.relation:hover{color:#c2baff}.rel-line{width:17px;height:1px;background:#778197}.rel-kind{margin-left:auto;color:var(--muted);font-size:9px}.no-selection{flex:1;display:grid;place-items:center;text-align:center;padding:25px;color:var(--muted);font-size:12px;line-height:1.6}.no-selection .target{font-size:25px;margin-bottom:9px}.metadata-add{border:0;background:none;color:#a99eff;font-size:10px;padding:0}.map-fields-note{color:var(--faint);font-size:10px;line-height:1.5;margin-top:10px}
-		.modal-backdrop{position:fixed;inset:0;background:#080a10b8;z-index:2000;display:none;place-items:center;padding:20px}.modal-backdrop.open{display:grid}.modal{width:min(500px,100%);max-height:min(720px,90vh);overflow:auto;background:#191d28;border:1px solid #353b4c;border-radius:12px;box-shadow:var(--shadow)}.modal-header{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.modal-header h2{font-size:14px;margin:0}.modal-body{padding:18px 19px}.modal-footer{padding:12px 19px 17px;display:flex;justify-content:flex-end;gap:8px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-field{margin-bottom:13px}.form-field label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.form-field input,.form-field select,.form-field textarea{width:100%;background:#11151e;border:1px solid #303646;border-radius:6px;color:var(--text);padding:9px 10px;outline:none;font-size:12px}.form-field input:focus,.form-field select:focus{border-color:#8073e2}.form-field small{display:block;color:var(--faint);font-size:10px;margin-top:5px}.primary{height:34px;border:1px solid #8b7eff66;background:#8474ed;color:#fff;border-radius:6px;padding:0 14px;font-size:11px;font-weight:600}.primary:hover{background:#9588fa}.secondary{height:34px;border:1px solid var(--line);background:#202532;color:#c6ccda;border-radius:6px;padding:0 13px;font-size:11px}.connection-preview{padding:10px;background:#131721;border:1px solid var(--line);border-radius:6px;margin-top:12px;color:var(--muted);font-size:11px}
-		.leaflet-container{font-family:'DM Sans',sans-serif}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#171b25;color:#e9edf6}.leaflet-popup-content{font-size:12px}.leaflet-popup-content small{color:#9ba4b7}
-		@media(max-width:1000px){.content{grid-template-columns:220px minmax(300px,1fr)}.inspector{position:absolute;right:0;top:66px;bottom:0;width:300px;z-index:2;box-shadow:-12px 0 35px #0005}.workspace-name{display:none}}
-		@media(max-width:650px){.app{grid-template-rows:58px 1fr}.topbar{padding:0 12px;gap:10px}.brand{min-width:0}.brand-sub,.search,.top-action span,.avatar{display:none}.top-action{margin-left:auto}.content{grid-template-columns:1fr}.sidebar{display:none}.viewbar{height:48px;padding:0 9px}.view-info{gap:7px;font-size:10px}.legend{display:none}.inspector{top:58px;width:min(300px,88vw)}.canvas-hint{bottom:10px;left:9px}.app{height:100dvh}}
+		:root {
+			--bg: #10131b;
+			--panel: #171b25;
+			--panel2: #1d2230;
+			--line: #2a3040;
+			--text: #e9edf6;
+			--muted: #8b94a8;
+			--faint: #626c81;
+			--accent: #9b8cff;
+			--teal: #65d6c1;
+			--orange: #ffb86b;
+			--red: #ff7d8b;
+			--shadow: 0 18px 60px #0008
+		}
+
+		* {
+			box-sizing: border-box
+		}
+
+		body {
+			margin: 0;
+			background: var(--bg);
+			color: var(--text);
+			font: 14px 'DM Sans', sans-serif;
+			height: 100vh;
+			overflow: hidden
+		}
+
+		button,
+		input,
+		select,
+		textarea {
+			font: inherit
+		}
+
+		button {
+			color: inherit;
+			cursor: pointer
+		}
+
+		.app {
+			height: 100vh;
+			display: grid;
+			grid-template-rows: 66px 1fr;
+			max-width: 1800px;
+			margin: auto
+		}
+
+		.topbar {
+			display: flex;
+			align-items: center;
+			gap: 26px;
+			padding: 0 24px;
+			border-bottom: 1px solid var(--line);
+			background: #12151e;
+			z-index: 3
+		}
+
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+			min-width: 225px
+		}
+
+		.brand-mark {
+			width: 30px;
+			height: 30px;
+			border: 1px solid #8676ff88;
+			border-radius: 9px;
+			display: grid;
+			place-items: center;
+			color: var(--accent);
+			background: #9181ff12
+		}
+
+		.brand-mark svg {
+			width: 18px
+		}
+
+		.brand-name {
+			font-weight: 700;
+			letter-spacing: -.3px
+		}
+
+		.brand-sub {
+			color: var(--muted);
+			font-size: 11px;
+			margin-top: 1px
+		}
+
+		.workspace-name {
+			height: 34px;
+			display: flex;
+			align-items: center;
+			gap: 9px;
+			color: #cbd1df;
+			padding: 0 12px;
+			border-left: 1px solid var(--line);
+			font-size: 13px
+		}
+
+		.live-dot {
+			width: 7px;
+			height: 7px;
+			background: #68d9a2;
+			border-radius: 50%;
+			box-shadow: 0 0 8px #68d9a277
+		}
+
+		.case-select-wrap {
+			position: relative;
+			display: flex;
+			align-items: center
+		}
+
+		.case-select {
+			height: 34px;
+			padding: 0 30px 0 12px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			border-radius: 7px;
+			color: #e9edf6;
+			outline: none;
+			appearance: none;
+			-webkit-appearance: none;
+			background-image: linear-gradient(45deg, transparent 50%, #9aa4ba 50%), linear-gradient(135deg, #9aa4ba 50%, transparent 50%);
+			background-position: calc(100% - 15px) calc(50% - 2px), calc(100% - 11px) calc(50% - 2px);
+			background-size: 4px 4px, 4px 4px;
+			background-repeat: no-repeat;
+			font-size: 11px;
+			min-width: 180px
+		}
+
+		.case-select:focus {
+			border-color: #8173e9
+		}
+
+		.layout-select-wrap {
+			margin: 0 14px 12px
+		}
+
+		.layout-select {
+			width: 100%;
+			height: 34px;
+			padding: 0 30px 0 12px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			border-radius: 7px;
+			color: #e9edf6;
+			outline: none;
+			appearance: none;
+			-webkit-appearance: none;
+			background-image: linear-gradient(45deg, transparent 50%, #9aa4ba 50%), linear-gradient(135deg, #9aa4ba 50%, transparent 50%);
+			background-position: calc(100% - 15px) calc(50% - 2px), calc(100% - 11px) calc(50% - 2px);
+			background-size: 4px 4px, 4px 4px;
+			background-repeat: no-repeat;
+			font-size: 11px
+		}
+
+		.layout-select:focus {
+			border-color: #8173e9
+		}
+
+		.top-spacer {
+			flex: 1
+		}
+
+		.search {
+			width: min(260px, 25vw);
+			position: relative
+		}
+
+		.search input {
+			height: 35px;
+			width: 100%;
+			background: var(--panel);
+			border: 1px solid var(--line);
+			border-radius: 7px;
+			padding: 0 34px;
+			color: var(--text);
+			outline: none
+		}
+
+		.search input:focus {
+			border-color: #8173e9
+		}
+
+		.search:before {
+			content: '⌕';
+			position: absolute;
+			left: 11px;
+			top: 5px;
+			color: var(--muted);
+			font-size: 19px
+		}
+
+		.search input {
+			padding-left: 33px
+		}
+
+		.shortcut {
+			position: absolute;
+			right: 8px;
+			top: 9px;
+			font: 10px 'DM Mono';
+			color: var(--faint)
+		}
+
+		.top-action {
+			height: 35px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			border-radius: 7px;
+			padding: 0 12px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			color: #cbd1df;
+			font-size: 12px
+		}
+
+		.top-action:hover,
+		.icon-btn:hover {
+			border-color: #555d70;
+			background: var(--panel2)
+		}
+
+		.avatar {
+			width: 31px;
+			height: 31px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			background: #29243e;
+			color: #c2baff;
+			font-size: 11px;
+			font-weight: 700;
+			border: 1px solid #8173e944
+		}
+
+		.content {
+			min-height: 0;
+			display: grid;
+			grid-template-columns: 254px minmax(350px, 1fr) 310px
+		}
+
+		.sidebar {
+			background: #141821;
+			border-right: 1px solid var(--line);
+			display: flex;
+			flex-direction: column;
+			min-height: 0
+		}
+
+		.side-head {
+			padding: 21px 17px 14px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between
+		}
+
+		.eyebrow {
+			font-size: 10px;
+			letter-spacing: 1.1px;
+			text-transform: uppercase;
+			color: var(--muted);
+			font-weight: 600
+		}
+
+		.count {
+			font: 11px 'DM Mono';
+			color: var(--muted)
+		}
+
+		.add-button {
+			height: 34px;
+			width: 100%;
+			margin: 0 14px 17px;
+			width: calc(100% - 28px);
+			border: 1px solid #8577ed66;
+			background: #8273e51a;
+			color: #c1b8ff;
+			border-radius: 7px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			font-weight: 600;
+			font-size: 12px
+		}
+
+		.add-button:hover {
+			background: #8273e52a
+		}
+
+		.side-search {
+			margin: 0 14px 13px;
+			position: relative
+		}
+
+		.side-search input {
+			width: 100%;
+			height: 33px;
+			border-radius: 6px;
+			background: #10131b;
+			border: 1px solid var(--line);
+			color: var(--text);
+			padding: 0 10px 0 30px;
+			outline: none;
+			font-size: 12px
+		}
+
+		.side-search:before {
+			content: '⌕';
+			position: absolute;
+			left: 10px;
+			top: 5px;
+			color: var(--muted);
+			font-size: 18px
+		}
+
+		.type-list {
+			padding: 0 10px 11px;
+			display: flex;
+			gap: 5px;
+			flex-wrap: wrap
+		}
+
+		.type-chip {
+			font-size: 10px;
+			border: 1px solid var(--line);
+			color: var(--muted);
+			background: transparent;
+			border-radius: 20px;
+			padding: 5px 8px
+		}
+
+		.type-chip.active {
+			color: #dedaff;
+			border-color: #766be0;
+			background: #8173e51b
+		}
+
+		.entity-list {
+			overflow: auto;
+			padding: 0 8px 15px
+		}
+
+		.entity-row {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 9px 9px;
+			border-radius: 7px;
+			cursor: pointer;
+			border: 1px solid transparent
+		}
+
+		.entity-row:hover {
+			background: #1b202c
+		}
+
+		.entity-row.selected {
+			background: #24263a;
+			border-color: #514c79
+		}
+
+		.entity-icon {
+			width: 30px;
+			height: 30px;
+			border-radius: 8px;
+			display: grid;
+			place-items: center;
+			font-size: 14px;
+			flex: none
+		}
+
+		.entity-copy {
+			min-width: 0;
+			flex: 1
+		}
+
+		.entity-name {
+			font-size: 12px;
+			font-weight: 600;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden
+		}
+
+		.entity-type {
+			font-size: 10px;
+			color: var(--muted);
+			margin-top: 3px
+		}
+
+		.entity-count {
+			font: 10px 'DM Mono';
+			color: var(--faint)
+		}
+
+		.side-footer {
+			margin-top: auto;
+			border-top: 1px solid var(--line);
+			padding: 12px 15px;
+			color: var(--muted);
+			font-size: 10px;
+			display: flex;
+			justify-content: space-between
+		}
+
+		.main {
+			min-width: 0;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			background-color: #11141c;
+			background-image: radial-gradient(#343a4a 0.65px, transparent .65px);
+			background-size: 19px 19px
+		}
+
+		.viewbar {
+			height: 54px;
+			flex: none;
+			border-bottom: 1px solid var(--line);
+			background: #12151ddd;
+			display: flex;
+			align-items: center;
+			padding: 0 17px;
+			gap: 4px
+		}
+
+		.view-tab {
+			padding: 8px 12px;
+			border: 0;
+			border-radius: 6px;
+			background: transparent;
+			color: var(--muted);
+			font-size: 12px
+		}
+
+		.view-tab.active {
+			background: #28253c;
+			color: #d1caff
+		}
+
+		.view-tab span {
+			margin-right: 7px
+		}
+
+		.view-info {
+			margin-left: auto;
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			color: var(--muted);
+			font-size: 11px
+		}
+
+		.zoom-controls {
+			display: flex;
+			align-items: center;
+			gap: 3px
+		}
+
+		.zoom-level {
+			font: 10px 'DM Mono';
+			color: var(--muted);
+			min-width: 36px;
+			text-align: center
+		}
+
+		.legend {
+			display: flex;
+			align-items: center;
+			gap: 5px
+		}
+
+		.legend i {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			display: inline-block
+		}
+
+		.canvas-wrap {
+			position: relative;
+			flex: 1;
+			min-height: 0;
+			overflow: hidden
+		}
+
+		.graph-svg {
+			width: 100%;
+			height: 100%;
+			display: block;
+			touch-action: none
+		}
+
+		.edge {
+			stroke: #626b7f;
+			stroke-width: 1.4;
+			opacity: .58
+		}
+
+		.edge-label {
+			fill: #8f98aa;
+			font: 10px 'DM Sans';
+			paint-order: stroke;
+			stroke: #11141c;
+			stroke-width: 4px;
+			stroke-linejoin: round
+		}
+
+		.node.dimmed {
+			opacity: .18
+		}
+
+		.edge-g.dimmed .edge {
+			opacity: .08
+		}
+
+		.edge-g.dimmed .edge-label {
+			opacity: .12
+		}
+
+		.edge-g.highlighted .edge {
+			stroke: #c9beff;
+			stroke-width: 2.6;
+			opacity: 1
+		}
+
+		.edge-g.highlighted .edge-label {
+			fill: #e6e0ff;
+			font-weight: 600
+		}
+
+		.node {
+			cursor: pointer
+		}
+
+		.node-halo {
+			fill: #a59aff;
+			opacity: 0;
+			transition: opacity .15s
+		}
+
+		.node:hover .node-halo,
+		.node.selected .node-halo {
+			opacity: .12
+		}
+
+		.node-circle {
+			stroke: #11141c;
+			stroke-width: 4
+		}
+
+		.node.selected .node-circle {
+			stroke: #c5bbff;
+			stroke-width: 2.5
+		}
+
+		.node-label {
+			fill: #e2e6ef;
+			font: 600 11px 'DM Sans';
+			text-anchor: middle;
+			paint-order: stroke;
+			stroke: #11141c;
+			stroke-width: 4px;
+			stroke-linejoin: round;
+			pointer-events: none
+		}
+
+		.node-sub {
+			fill: #8b94a8;
+			font: 9px 'DM Sans';
+			text-anchor: middle;
+			paint-order: stroke;
+			stroke: #11141c;
+			stroke-width: 3px;
+			pointer-events: none
+		}
+
+		.canvas-hint {
+			position: absolute;
+			left: 17px;
+			bottom: 15px;
+			padding: 7px 10px;
+			background: #161a24dd;
+			border: 1px solid var(--line);
+			border-radius: 6px;
+			color: var(--muted);
+			font-size: 10px
+		}
+
+		.empty-state {
+			position: absolute;
+			inset: 0;
+			display: none;
+			place-items: center;
+			text-align: center;
+			color: var(--muted)
+		}
+
+		.empty-state.show {
+			display: grid
+		}
+
+		.empty-state strong {
+			display: block;
+			color: var(--text);
+			margin-bottom: 6px
+		}
+
+		.map-panel {
+			position: absolute;
+			inset: 0;
+			display: none;
+			background: #dce4e6
+		}
+
+		.map-panel.active {
+			display: block
+		}
+
+		.map-panel #map {
+			width: 100%;
+			height: 100%
+		}
+
+		.map-empty {
+			position: absolute;
+			inset: 0;
+			display: none;
+			z-index: 500;
+			place-items: center;
+			text-align: center;
+			color: #626c81;
+			background: #e8edefdd
+		}
+
+		.map-empty.show {
+			display: grid
+		}
+
+		.map-empty strong {
+			display: block;
+			color: #34404a;
+			margin-bottom: 5px
+		}
+
+		.map-caption {
+			position: absolute;
+			z-index: 600;
+			left: 16px;
+			bottom: 16px;
+			padding: 8px 10px;
+			border-radius: 6px;
+			background: #171b25e8;
+			color: #dbe1ed;
+			font-size: 10px
+		}
+
+		.inspector {
+			border-left: 1px solid var(--line);
+			background: #141821;
+			min-width: 0;
+			display: flex;
+			flex-direction: column;
+			overflow: auto
+		}
+
+		.inspector-head {
+			padding: 19px 17px 15px;
+			border-bottom: 1px solid var(--line);
+			display: flex;
+			align-items: center;
+			justify-content: space-between
+		}
+
+		.icon-btn {
+			height: 29px;
+			min-width: 30px;
+			border: 1px solid var(--line);
+			background: #191d28;
+			border-radius: 6px;
+			color: var(--muted);
+			display: grid;
+			place-items: center
+		}
+
+		.detail-hero {
+			padding: 20px 17px 15px;
+			border-bottom: 1px solid var(--line)
+		}
+
+		.hero-top {
+			display: flex;
+			align-items: center;
+			gap: 12px
+		}
+
+		.hero-icon {
+			width: 42px;
+			height: 42px;
+			border-radius: 11px;
+			display: grid;
+			place-items: center;
+			font-size: 20px
+		}
+
+		.hero-title {
+			font-weight: 700;
+			font-size: 15px;
+			letter-spacing: -.2px;
+			overflow-wrap: anywhere
+		}
+
+		.hero-type {
+			color: var(--muted);
+			font-size: 11px;
+			margin-top: 4px
+		}
+
+		.hero-actions {
+			display: flex;
+			gap: 7px;
+			margin-top: 16px
+		}
+
+		.small-button {
+			height: 29px;
+			padding: 0 9px;
+			border-radius: 6px;
+			border: 1px solid var(--line);
+			background: #1b202b;
+			color: #bac2d1;
+			font-size: 10px
+		}
+
+		.small-button:hover {
+			border-color: #697287
+		}
+
+		.small-button.danger {
+			color: #ff9eaa
+		}
+
+		.section {
+			padding: 16px 17px;
+			border-bottom: 1px solid var(--line)
+		}
+
+		.section-title {
+			font-size: 10px;
+			text-transform: uppercase;
+			letter-spacing: .9px;
+			font-weight: 600;
+			color: #a8b0c1;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 12px
+		}
+
+		.field {
+			margin-bottom: 11px
+		}
+
+		.field:last-child {
+			margin-bottom: 0
+		}
+
+		.field label {
+			display: block;
+			color: var(--muted);
+			font-size: 10px;
+			margin-bottom: 5px
+		}
+
+		.field input,
+		.field textarea,
+		.field select {
+			width: 100%;
+			border: 1px solid transparent;
+			background: #1a1f2b;
+			color: #e1e6f0;
+			border-radius: 5px;
+			padding: 8px 9px;
+			font-size: 11px;
+			outline: none
+		}
+
+		.field input:focus,
+		.field textarea:focus {
+			border-color: #7168c5
+		}
+
+		.field textarea {
+			resize: vertical;
+			min-height: 58px
+		}
+
+		.relation-list {
+			display: flex;
+			flex-direction: column;
+			gap: 7px
+		}
+
+		.relation {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			color: #d0d6e2;
+			font-size: 11px;
+			cursor: pointer
+		}
+
+		.relation:hover {
+			color: #c2baff
+		}
+
+		.rel-line {
+			width: 17px;
+			height: 1px;
+			background: #778197
+		}
+
+		.rel-kind {
+			margin-left: auto;
+			color: var(--muted);
+			font-size: 9px
+		}
+
+		.no-selection {
+			flex: 1;
+			display: grid;
+			place-items: center;
+			text-align: center;
+			padding: 25px;
+			color: var(--muted);
+			font-size: 12px;
+			line-height: 1.6
+		}
+
+		.no-selection .target {
+			font-size: 25px;
+			margin-bottom: 9px
+		}
+
+		.metadata-add {
+			border: 0;
+			background: none;
+			color: #a99eff;
+			font-size: 10px;
+			padding: 0
+		}
+
+		.map-fields-note {
+			color: var(--faint);
+			font-size: 10px;
+			line-height: 1.5;
+			margin-top: 10px
+		}
+
+		.modal-backdrop {
+			position: fixed;
+			inset: 0;
+			background: #080a10b8;
+			z-index: 2000;
+			display: none;
+			place-items: center;
+			padding: 20px
+		}
+
+		.modal-backdrop.open {
+			display: grid
+		}
+
+		.modal {
+			width: min(500px, 100%);
+			max-height: min(720px, 90vh);
+			overflow: auto;
+			background: #191d28;
+			border: 1px solid #353b4c;
+			border-radius: 12px;
+			box-shadow: var(--shadow)
+		}
+
+		.modal-header {
+			padding: 17px 19px;
+			border-bottom: 1px solid var(--line);
+			display: flex;
+			align-items: center;
+			justify-content: space-between
+		}
+
+		.modal-header h2 {
+			font-size: 14px;
+			margin: 0
+		}
+
+		.modal-body {
+			padding: 18px 19px
+		}
+
+		.modal-footer {
+			padding: 12px 19px 17px;
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px
+		}
+
+		.form-row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px
+		}
+
+		.form-field {
+			margin-bottom: 13px
+		}
+
+		.form-field label {
+			display: block;
+			color: var(--muted);
+			font-size: 11px;
+			margin-bottom: 6px
+		}
+
+		.form-field input,
+		.form-field select,
+		.form-field textarea {
+			width: 100%;
+			background: #11151e;
+			border: 1px solid #303646;
+			border-radius: 6px;
+			color: var(--text);
+			padding: 9px 10px;
+			outline: none;
+			font-size: 12px
+		}
+
+		.form-field input:focus,
+		.form-field select:focus {
+			border-color: #8073e2
+		}
+
+		.form-field small {
+			display: block;
+			color: var(--faint);
+			font-size: 10px;
+			margin-top: 5px
+		}
+
+		.primary {
+			height: 34px;
+			border: 1px solid #8b7eff66;
+			background: #8474ed;
+			color: #fff;
+			border-radius: 6px;
+			padding: 0 14px;
+			font-size: 11px;
+			font-weight: 600
+		}
+
+		.primary:hover {
+			background: #9588fa
+		}
+
+		.secondary {
+			height: 34px;
+			border: 1px solid var(--line);
+			background: #202532;
+			color: #c6ccda;
+			border-radius: 6px;
+			padding: 0 13px;
+			font-size: 11px
+		}
+
+		.connection-preview {
+			padding: 10px;
+			background: #131721;
+			border: 1px solid var(--line);
+			border-radius: 6px;
+			margin-top: 12px;
+			color: var(--muted);
+			font-size: 11px
+		}
+
+		.leaflet-container {
+			font-family: 'DM Sans', sans-serif
+		}
+
+		.leaflet-popup-content-wrapper,
+		.leaflet-popup-tip {
+			background: #171b25;
+			color: #e9edf6
+		}
+
+		.leaflet-popup-content {
+			font-size: 12px
+		}
+
+		.leaflet-popup-content small {
+			color: #9ba4b7
+		}
+
+		@media(max-width:1000px) {
+			.content {
+				grid-template-columns: 220px minmax(300px, 1fr)
+			}
+
+			.inspector {
+				position: absolute;
+				right: 0;
+				top: 66px;
+				bottom: 0;
+				width: 300px;
+				z-index: 2;
+				box-shadow: -12px 0 35px #0005
+			}
+
+			.workspace-name {
+				display: none
+			}
+		}
+
+		@media(max-width:650px) {
+			.app {
+				grid-template-rows: 58px 1fr
+			}
+
+			.topbar {
+				padding: 0 12px;
+				gap: 10px
+			}
+
+			.brand {
+				min-width: 0
+			}
+
+			.brand-sub,
+			.search,
+			.top-action span,
+			.avatar {
+				display: none
+			}
+
+			.top-action {
+				margin-left: auto
+			}
+
+			.content {
+				grid-template-columns: 1fr
+			}
+
+			.sidebar {
+				display: none
+			}
+
+			.viewbar {
+				height: 48px;
+				padding: 0 9px
+			}
+
+			.view-info {
+				gap: 7px;
+				font-size: 10px
+			}
+
+			.legend {
+				display: none
+			}
+
+			.inspector {
+				top: 58px;
+				width: min(300px, 88vw)
+			}
+
+			.canvas-hint {
+				bottom: 10px;
+				left: 9px
+			}
+
+			.app {
+				height: 100dvh
+			}
+		}
 	</style>
 </head>
+
 <body>
 	<div class="app">
 		<header class="topbar">
-			<div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.5"/><circle cx="19" cy="7" r="1.5"/><circle cx="7" cy="19" r="1.5"/><path d="m10.2 10.5-4-3m6.7 2.7 4.5-2.2m-5.9 6.2-3.7 3.3"/></svg></div><div><div class="brand-name">threadline</div><div class="brand-sub">OSINT workspace</div></div></div>
+			<div class="brand">
+				<div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+						<circle cx="12" cy="12" r="2.4" />
+						<circle cx="5" cy="6" r="1.5" />
+						<circle cx="19" cy="7" r="1.5" />
+						<circle cx="7" cy="19" r="1.5" />
+						<path d="m10.2 10.5-4-3m6.7 2.7 4.5-2.2m-5.9 6.2-3.7 3.3" />
+					</svg></div>
+				<div>
+					<div class="brand-name">threadline</div>
+					<div class="brand-sub">OSINT workspace</div>
+				</div>
+			</div>
 			<div class="workspace-name"><span class="live-dot"></span><span>Investigation workspace</span></div>
-			<a href="https://remiotore.github.io/remiotore/" target="_blank" rel="noopener noreferrer" style="color:#dfe7ff;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;">Hire my services!</a>
+			<a href="https://remiotore.github.io/remiotore/" target="_blank" rel="noopener noreferrer"
+				style="color:#dfe7ff;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;">Hire my
+				services!</a>
 			<div class="top-spacer"></div>
-			<label class="search"><input id="globalSearch" placeholder="Search entities…" aria-label="Search entities"/><span class="shortcut">/</span></label>
+			<label class="search"><input id="globalSearch" placeholder="Search entities…"
+					aria-label="Search entities" /><span class="shortcut">/</span></label>
 			<label class="case-select-wrap" aria-label="Select a use case">
 				<select id="usecaseSelect" class="case-select">
 					<option value="">Select Demo Case</option>
@@ -45,7 +1145,8 @@
 		</header>
 		<div class="content">
 			<aside class="sidebar">
-				<div class="side-head"><span class="eyebrow">Entities</span><span class="count" id="entityCount">0</span></div>
+				<div class="side-head"><span class="eyebrow">Entities</span><span class="count"
+						id="entityCount">0</span></div>
 				<button class="add-button" id="addEntityBtn"><b style="font-size:16px">＋</b> Add entity</button>
 				<label class="layout-select-wrap" aria-label="Select layout">
 					<select id="layoutSelect" class="layout-select">
@@ -57,7 +1158,8 @@
 						<option value="cluster">Cluster</option>
 					</select>
 				</label>
-				<label class="side-search"><input id="sideSearch" placeholder="Filter entities…" aria-label="Filter entities" /></label>
+				<label class="side-search"><input id="sideSearch" placeholder="Filter entities…"
+						aria-label="Filter entities" /></label>
 				<div class="type-list" id="typeFilters"></div>
 				<div class="entity-list" id="entityList"></div>
 				<div class="side-footer"><span>Saved locally in this browser</span><span>●</span></div>
@@ -65,177 +1167,236 @@
 			<main class="main">
 				<div class="viewbar">
 					<button class="view-tab active" data-view="network"><span>⌘</span>Network</button>
-					<button class="view-tab" data-view="map"><span>◎</span>Map</button><div class="zoom-controls"><button class="icon-btn" id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button><span class="zoom-level" id="zoomLevel">100%</span><button class="icon-btn" id="zoomIn" title="Zoom in" aria-label="Zoom in">＋</button></div>
-					<div class="view-info"><span id="edgeCount">0 connections</span><span class="legend"><i style="background:#9b8cff"></i>People</span><span class="legend"><i style="background:#65d6c1"></i>Places &amp; orgs</span></div>
+					<button class="view-tab" data-view="map"><span>◎</span>Map</button>
+					<div class="zoom-controls"><button class="icon-btn" id="zoomOut" title="Zoom out"
+							aria-label="Zoom out">−</button><span class="zoom-level" id="zoomLevel">100%</span><button
+							class="icon-btn" id="zoomIn" title="Zoom in" aria-label="Zoom in">＋</button></div>
+					<div class="view-info"><span id="edgeCount">0 connections</span><span class="legend"><i
+								style="background:#9b8cff"></i>People</span><span class="legend"><i
+								style="background:#65d6c1"></i>Places &amp; orgs</span></div>
 				</div>
 				<div class="canvas-wrap" id="canvasWrap">
 					<svg class="graph-svg" id="graph" role="img" aria-label="Entity relationship network"></svg>
-					<div class="map-panel" id="mapPanel"><div id="map"></div><div class="map-empty" id="mapEmpty"><div><strong>No mapped entities yet</strong>Add latitude and longitude in an entity's metadata to plot it here.</div></div><div class="map-caption">Locations from entity metadata · <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener noreferrer">Report a map issue</a></div></div>
-					<div class="empty-state" id="emptyState"><div><strong>Your network starts here</strong>Add an entity to begin mapping relationships.</div></div>
-					<div class="canvas-hint" id="canvasHint">Drag nodes to arrange · Scroll to zoom · Ball size = connection count · Select a node to inspect</div>
+					<div class="map-panel" id="mapPanel">
+						<div id="map"></div>
+						<div class="map-empty" id="mapEmpty">
+							<div><strong>No mapped entities yet</strong>Add latitude and longitude in an entity's
+								metadata to plot it here.</div>
+						</div>
+						<div class="map-caption">Locations from entity metadata · <a
+								href="https://www.openstreetmap.org/fixthemap" target="_blank"
+								rel="noopener noreferrer">Report a map issue</a></div>
+					</div>
+					<div class="empty-state" id="emptyState">
+						<div><strong>Your network starts here</strong>Add an entity to begin mapping relationships.
+						</div>
+					</div>
+					<div class="canvas-hint" id="canvasHint">Drag nodes to arrange · Scroll to zoom · Ball size =
+						connection count · Select a node to inspect</div>
 				</div>
 			</main>
 			<aside class="inspector" id="inspector"></aside>
 		</div>
 	</div>
-	<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true"><div class="modal" id="modal"></div></div>
-	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+		<div class="modal" id="modal"></div>
+	</div>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 	<script>
-	(()=>{
-		const STORAGE_KEY='threadline-osint-v1';
-		const typeInfo={
-			person:{label:'Person',icon:'♙',color:'#a99aff',bg:'#2a2540',fields:['Full name','Aliases','Date of birth','Nationality','Occupation','Email','Phone','Address','Latitude','Longitude','Source','Notes']},
-			company:{label:'Company',icon:'▦',color:'#65d6c1',bg:'#1c3435',fields:['Legal name','Registration number','Website','Industry','Founded','Address','Latitude','Longitude','Source','Notes']},
-			school:{label:'School / university',icon:'⌂',color:'#71b9ff',bg:'#1e2d42',fields:['Official name','Institution type','Website','Address','Latitude','Longitude','Source','Notes']},
-			location:{label:'Location',icon:'⌖',color:'#ffb86b',bg:'#3b2d20',fields:['Location name','Address','Latitude','Longitude','Type','Source','Notes']},
-			online_account:{label:'Online account',icon:'◎',color:'#ff8da1',bg:'#3b252f',fields:['Username','Platform','Profile URL','Email','Created','Source','Notes']},
-			vehicle:{label:'Vehicle',icon:'▰',color:'#80c7ff',bg:'#203140',fields:['Make / model','Registration','VIN','Color','Owner','Source','Notes']},
-			organization:{label:'Organization',icon:'⬡',color:'#ffc875',bg:'#3a3022',fields:['Official name','Organization type','Website','Address','Latitude','Longitude','Source','Notes']}
-		};
-		const relationships=['knows','works at','studied at','lives at','owns','associated with','located at','family of','employed by','other'];
-		const usecases={usecase1:{version:1,entities:[
-		{id:'e1',type:'person',name:'Pablo Escobar',metadata:{'Full name':'Pablo Emilio Escobar Gaviria','Aliases':'El Patrón, Don Pablo','Date of birth':'December 1, 1949','Nationality':'Colombian','Occupation':'Drug lord, cartel leader','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Historical public records','Notes':'Leader of the Medellín Cartel; notorious for cocaine trafficking and violent control of drug routes until his death in 1993, when the Search Bloc and Los Pepes closed in.'},x:.38,y:.34},
-		{id:'e2',type:'organization',name:'Medellín Cartel',metadata:{'Official name':'Medellín Cartel','Organization type':'Drug trafficking organization','Website':'https://en.wikipedia.org/wiki/Medell%C3%ADn_Cartel','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Historical reporting and legal archives','Notes':'The cartel dominated cocaine trafficking in the 1970s and 1980s, operating globally through brokers and front companies.'},x:.68,y:.28},
-		{id:'e3',type:'person',name:'Jorge Luis Ochoa',metadata:{'Full name':'Jorge Luis Ochoa Vásquez','Aliases':'Jorge Ochoa','Date of birth':'April 15, 1950','Nationality':'Colombian','Occupation':'Drug trafficker','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Public court and historical records','Notes':'One of the key co-founders of the Medellín Cartel network and a major smuggling partner.'},x:.72,y:.56},
-		{id:'e4',type:'person',name:'Gustavo Gaviria',metadata:{'Full name':'Gustavo Gaviria','Date of birth':'1950','Nationality':'Colombian','Occupation':'Drug trafficker and logistics manager','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Biographical and journalistic reporting','Notes':'Trusted lieutenant in the Medellín network, involved in trafficking and operational logistics.'},x:.31,y:.67},
-		{id:'e5',type:'person',name:'Carlos Lehder',metadata:{'Full name':'Carlos Enrique Lehder Rivas','Aliases':'The German narco','Date of birth':'September 7, 1949','Nationality':'Colombian / German','Occupation':'Drug trafficker','Address':'Bahamas / Medellín network','Latitude':'25.0343','Longitude':'-77.3963','Source':'U.S. court documents and biographical accounts','Notes':'A senior co-conspirator who used Caribbean logistics hubs, including Norman’s Cay in the Bahamas, to move cocaine toward the United States.'},x:.18,y:.48},
-		{id:'e6',type:'person',name:'Pacho Herrera',metadata:{'Full name':'José Guadalupe Herrera','Aliases':'Pacho Herrera','Date of birth':'1944','Nationality':'Colombian','Occupation':'Drug trafficker and key supplier','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Historical investigation archives','Notes':'Critical in the cartel’s production and distribution network, especially in cocaine processing and shipment coordination.'},x:.55,y:.74},
-		{id:'e7',type:'location',name:'Hacienda Nápoles',metadata:{'Location name':'Hacienda Nápoles','Address':'Puerto Triunfo, Antioquia, Colombia','Latitude':'5.8789','Longitude':'-74.6937','Type':'Estate / private compound','Source':'Historical site and media archives','Notes':'Escobar’s major private estate and a key symbol of his business empire, used for logistics, leisure, and political access.'},x:.85,y:.41},
-		{id:'e8',type:'location',name:'Medellín, Colombia',metadata:{'Location name':'Medellín','Address':'Medellín, Antioquia, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Type':'City','Source':'OpenStreetMap and public geographic reference','Notes':'The cartel’s base of operations and the center of its commercial and political reach.'},x:.82,y:.72},
-		{id:'e9',type:'organization',name:'Cocaine Trafficking Network',metadata:{'Official name':'Cocaine Trafficking Network','Organization type':'Transnational criminal business','Address':'Global corridor: Colombia → Caribbean → United States','Latitude':'9.0000','Longitude':'-74.0000','Source':'Public investigative summaries','Notes':'The operational business model combined transport, financing, corruption, and protection services across multiple countries.'},x:.52,y:.14},
-		{id:'e10',type:'person',name:'George Jung',metadata:{'Full name':'George Jacob Jung','Aliases':'Boston George','Date of birth':'August 6, 1942','Nationality':'American','Occupation':'Drug trafficker and smuggler','Address':'Weymouth, Massachusetts, USA','Source':'U.S. court documents and biographical accounts','Notes':'American smuggler who partnered with the Medellín Cartel to move cocaine into the United States by air and sea.'},x:.08,y:.30},
-		{id:'e11',type:'person',name:'José Gonzalo Rodríguez Gacha',metadata:{'Full name':'José Gonzalo Rodríguez Gacha','Aliases':'El Mexicano','Date of birth':'May 14, 1947','Nationality':'Colombian','Occupation':'Drug trafficker and cartel co-founder','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Historical and court records','Notes':'Co-founder of the Medellín Cartel who oversaw cocaine production and enforcement until his death in 1989.'},x:.60,y:.16},
-		{id:'e12',type:'person',name:'Jhon Jairo Velásquez',metadata:{'Full name':'Jhon Jairo Velásquez Vásquez','Aliases':'Popeye','Date of birth':'April 15, 1962','Nationality':'Colombian','Occupation':'Hitman and cartel enforcer','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Confessions, court records and media interviews','Notes':'Notorious sicario who confessed to hundreds of killings carried out for the Medellín Cartel.'},x:.70,y:.62},
-		{id:'e13',type:'organization',name:'Cali Cartel',metadata:{'Official name':'Cali Cartel','Organization type':'Drug trafficking organization','Website':'https://en.wikipedia.org/wiki/Cali_Cartel','Address':'Cali, Colombia','Latitude':'3.4516','Longitude':'-76.5320','Source':'Historical reporting and court records','Notes':'Rival trafficking organization based in Cali that absorbed Medellín routes after the cartel’s collapse.'},x:.90,y:.20},
-		{id:'e14',type:'organization',name:'Los Pepes',metadata:{'Official name':'Los Pepes','Organization type':'Paramilitary vigilante group','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Investigative reporting and declassified documents','Notes':'Persecution group formed to dismantle Escobar’s network, aligned with the Cali Cartel and state security forces.'},x:.12,y:.66},
-		{id:'e15',type:'organization',name:'Search Bloc',metadata:{'Official name':'Bloque de Búsqueda','Organization type':'Police task force','Address':'Colombia','Latitude':'4.5709','Longitude':'-74.2973','Source':'Historical and government records','Notes':'Colombian police unit created to hunt Escobar; its 1993 operation ended his reign.'},x:.44,y:.48},
-		{id:'e16',type:'person',name:'Roberto Escobar',metadata:{'Full name':'Roberto Escobar Gaviria','Aliases':'El Osito','Date of birth':'January 13, 1947','Nationality':'Colombian','Occupation':'Accountant and cartel manager','Address':'Medellín, Colombia','Latitude':'6.2442','Longitude':'-75.5812','Source':'Biographical and journalistic records','Notes':'Pablo’s brother and the cartel’s chief accountant, who managed its finances and logistics.'},x:.24,y:.20},
-		{id:'e17',type:'location',name:'Miami, USA',metadata:{'Location name':'Miami','Address':'Miami, Florida, USA','Latitude':'25.7617','Longitude':'-80.1918','Type':'City','Source':'Geographic reference','Notes':'Primary U.S. distribution hub for Medellín cocaine through the 1980s.'},x:.96,y:.56},
-		{id:'e18',type:'location',name:'Norman’s Cay',metadata:{'Location name':'Norman’s Cay','Address':'Exuma, Bahamas','Latitude':'24.6083','Longitude':'-76.8297','Type':'Island','Source':'Geographic and historical records','Notes':'Carlos Lehder’s private island, used as a transshipment hub for cocaine flights to the United States.'},x:.10,y:.12}
-	],relationships:[{id:'r1',source:'e1',target:'e2',type:'owns'},{id:'r2',source:'e1',target:'e3',type:'associated with'},{id:'r3',source:'e1',target:'e4',type:'associated with'},{id:'r4',source:'e1',target:'e5',type:'associated with'},{id:'r5',source:'e1',target:'e6',type:'associated with'},{id:'r6',source:'e1',target:'e7',type:'owns'},{id:'r7',source:'e1',target:'e8',type:'lives at'},{id:'r8',source:'e2',target:'e8',type:'located at'},{id:'r9',source:'e2',target:'e9',type:'operates'},{id:'r10',source:'e3',target:'e2',type:'works at'},{id:'r11',source:'e4',target:'e2',type:'works at'},{id:'r12',source:'e5',target:'e9',type:'operates'},{id:'r13',source:'e6',target:'e2',type:'works at'},{id:'r14',source:'e7',target:'e8',type:'located at'},{id:'r15',source:'e10',target:'e1',type:'associated with'},{id:'r16',source:'e10',target:'e2',type:'associated with'},{id:'r17',source:'e11',target:'e2',type:'works at'},{id:'r18',source:'e12',target:'e2',type:'works at'},{id:'r19',source:'e13',target:'e9',type:'associated with'},{id:'r20',source:'e14',target:'e1',type:'associated with'},{id:'r21',source:'e14',target:'e13',type:'associated with'},{id:'r22',source:'e15',target:'e1',type:'associated with'},{id:'r23',source:'e16',target:'e2',type:'works at'},{id:'r24',source:'e16',target:'e1',type:'family of'},{id:'r25',source:'e2',target:'e17',type:'associated with'},{id:'r26',source:'e5',target:'e18',type:'lives at'}]},usecase2:{version:1,entities:[
-{id:'e1',type:'person',name:'Jeffrey Epstein',metadata:{'Full name':'Jeffrey Edward Epstein','Aliases':'Eppy, Bear','Date of birth':'January 20, 1953','Nationality':'American','Occupation':'Financier; convicted sex offender','Address':'New York City, USA','Latitude':'40.7769','Longitude':'-73.9654','Source':'U.S. court records (United States v. Epstein, 2019)','Notes':'Financier who built a private fortune; pleaded guilty in 2008 to procuring a child for prostitution; died in a Manhattan jail cell on August 10, 2019.'},x:0.44,y:0.32},
-{id:'e2',type:'person',name:'Ghislaine Maxwell',metadata:{'Full name':'Ghislaine Noelle Marion Maxwell','Date of birth':'December 25, 1961','Nationality':'British','Occupation':'Socialite; Epstein’s associate','Address':'New York City, USA','Latitude':'40.7769','Longitude':'-73.9654','Source':'U.S. court records (United States v. Maxwell, 2021)','Notes':'Epstein’s longtime associate; convicted in December 2021 of sex trafficking of a minor and related charges; sentenced to 20 years.'},x:0.52,y:0.4},
-{id:'e3',type:'person',name:'Les Wexner',metadata:{'Full name':'Leslie Herbert Wexner','Date of birth':'September 8, 1937','Nationality':'American','Occupation':'Founder and CEO of L Brands','Address':'Columbus, Ohio, USA','Latitude':'39.9612','Longitude':'-82.9988','Source':'Press investigations (New York Times, 2019)','Notes':'Billionaire founder of L Brands (Victoria’s Secret); Epstein managed his fortune and held power of attorney.'},x:0.62,y:0.2},
-{id:'e4',type:'person',name:'Ehud Barak',metadata:{'Full name':'Ehud Barak','Date of birth':'February 12, 1942','Nationality':'Israeli','Occupation':'Prime Minister of Israel (1999–2001)','Address':'Tel Aviv, Israel','Latitude':'32.0853','Longitude':'34.7818','Source':'Press investigations (Haaretz, 2019)','Notes':'Former Israeli prime minister who invested in Epstein-backed funds and met him repeatedly.'},x:0.6,y:0.52},
-{id:'e5',type:'person',name:'Bill Clinton',metadata:{'Full name':'William Jefferson Clinton','Date of birth':'August 19, 1946','Nationality':'American','Occupation':'42nd President of the United States','Address':'Little Rock / New York, USA','Latitude':'40.7769','Longitude':'-73.9654','Source':'Flight logs reported by press (2019)','Notes':'Flight logs showed the former president flew on Epstein’s aircraft multiple times; his office denied wrongdoing.'},x:0.3,y:0.16},
-{id:'e6',type:'person',name:'Donald Trump',metadata:{'Full name':'Donald John Trump','Date of birth':'June 14, 1946','Nationality':'American','Occupation':'Businessman; President of the United States','Address':'New York City, USA','Latitude':'40.7769','Longitude':'-73.9654','Source':'Press investigations (2019)','Notes':'Reported social acquaintance of Epstein in the 2000s; denied wrongdoing and said he had cut ties.'},x:0.22,y:0.3},
-{id:'e7',type:'person',name:'Prince Andrew',metadata:{'Full name':'Prince Andrew, Duke of York','Date of birth':'February 19, 1960','Nationality':'British','Occupation':'Member of the British royal family','Address':'London, United Kingdom','Latitude':'51.5074','Longitude':'-0.1278','Source':'Court records (Giuffre v. Maxwell, 2015–2022)','Notes':'Accused by Virginia Giuffre of sexual abuse (denied); settled the civil case in 2022 without admitting liability; stepped back from royal duties in 2019.'},x:0.14,y:0.44},
-{id:'e8',type:'person',name:'Steve Bannon',metadata:{'Full name':'Stephen Kevin Bannon','Date of birth':'November 27, 1953','Nationality':'American','Occupation':'Former White House chief strategist','Address':'Washington, D.C., USA','Latitude':'38.9072','Longitude':'-77.0369','Source':'Press investigations (New York Times, 2019)','Notes':'Former White House strategist; documented meetings with Epstein between 2017 and 2019.'},x:0.36,y:0.54},
-{id:'e9',type:'person',name:'Alan Dershowitz',metadata:{'Full name':'Alan Morton Dershowitz','Date of birth':'September 1, 1938','Nationality':'American','Occupation':'Harvard law professor; defense lawyer','Address':'Cambridge, Massachusetts, USA','Latitude':'42.3736','Longitude':'-71.1097','Source':'Court records (2008 defense team)','Notes':'Harvard law professor on Epstein’s 2008 defense team; denied Virginia Giuffre’s allegations against him.'},x:0.26,y:0.66},
-{id:'e10',type:'person',name:'Alexander Acosta',metadata:{'Full name':'R. Alexander Acosta','Date of birth':'January 16, 1969','Nationality':'American','Occupation':'U.S. Attorney (S.D. Florida, 2005–2009)','Address':'Miami, Florida, USA','Latitude':'25.7617','Longitude':'-80.1918','Source':'U.S. Department of Justice records','Notes':'Federal prosecutor who approved the 2008 non-prosecution agreement; resigned as Labor Secretary in 2019 after the deal’s fallout.'},x:0.56,y:0.66},
-{id:'e11',type:'person',name:'Virginia Giuffre',metadata:{'Full name':'Virginia Louise Giuffre','Aliases':'Virginia Roberts Giuffre','Date of birth':'August 9, 1983','Nationality':'American','Occupation':'Key accuser in the Epstein case','Address':'California, USA','Latitude':'34.0522','Longitude':'-118.2437','Source':'Court filings (Giuffre v. Maxwell, 2015)','Notes':'Central accuser of Epstein, Maxwell and Prince Andrew; her allegations drove the 2019–2021 prosecutions; died in 2025.'},x:0.42,y:0.78},
-{id:'e12',type:'company',name:'Financial Management Trust',metadata:{'Legal name':'Financial Management Trust','Industry':'Investment management','Address':'New York City, USA','Latitude':'40.7769','Longitude':'-73.9654','Source':'Press investigations (2019)','Notes':'One of Epstein’s main investment vehicles; managed his fortune and the Wexner family’s finances.'},x:0.7,y:0.32},
-{id:'e13',type:'vehicle',name:'Lolita Express',metadata:{'Make / model':'Boeing 727-200 ’Lolita Express’','Owner':'Jeffrey Epstein','Source':'Flight logs reported by press','Notes':'Epstein’s private jet, nicknamed the Lolita Express; flight logs recorded flights with political and business associates.'},x:0.8,y:0.48},
-{id:'e14',type:'location',name:'Little St. James',metadata:{'Location name':'Little St. James','Address':'Little St. James, U.S. Virgin Islands','Latitude':'18.3086','Longitude':'-64.9347','Type':'Private island','Source':'Press investigations (2019)','Notes':'Epstein’s 70-acre private island in the U.S. Virgin Islands; site of abuse allegations in court filings.'},x:0.74,y:0.74},
-{id:'e15',type:'location',name:'Manhattan, New York',metadata:{'Location name':'Manhattan','Address':'9 East 71st Street, New York City, USA','Latitude':'40.7769','Longitude':'-73.9654','Type':'City','Source':'Geographic reference','Notes':'Site of Epstein’s Herbert N. Straus House townhouse, where he died in federal custody in 2019.'},x:0.5,y:0.1},
-{id:'e16',type:'location',name:'Palm Beach, Florida',metadata:{'Location name':'Palm Beach','Address':'Palm Beach, Florida, USA','Latitude':'26.6587','Longitude':'-80.0832','Type':'City','Source':'Geographic reference','Notes':'Epstein’s Florida mansion, where the 2005 investigation that led to the 2008 plea deal began.'},x:0.34,y:0.88},
-{id:'e17',type:'location',name:'United States Virgin Islands',metadata:{'Location name':'United States Virgin Islands','Address':'U.S. Virgin Islands','Latitude':'18.3358','Longitude':'-64.8963','Type':'Territory','Source':'Geographic reference','Notes':'U.S. territory where Epstein’s Little St. James island and other holdings are located.'},x:0.86,y:0.9},
-{id:'e18',type:'organization',name:'2008 plea deal (NPA)',metadata:{'Official name':'Non-prosecution agreement (2008)','Organization type':'Legal agreement','Address':'Miami, Florida, USA','Latitude':'25.7617','Longitude':'-80.1918','Source':'U.S. court records (2019 ruling)','Notes':'Deal brokered by the U.S. Attorney’s office that shielded Epstein and co-conspirators from federal charges; ruled a violation of the Crime Victims’ Rights Act in 2019.'},x:0.64,y:0.84}
-],relationships:[{id:'r1',source:'e1',target:'e2',type:'associated with'},{id:'r2',source:'e1',target:'e3',type:'associated with'},{id:'r3',source:'e1',target:'e4',type:'associated with'},{id:'r4',source:'e1',target:'e5',type:'associated with'},{id:'r5',source:'e1',target:'e6',type:'associated with'},{id:'r6',source:'e1',target:'e7',type:'associated with'},{id:'r7',source:'e1',target:'e8',type:'associated with'},{id:'r8',source:'e1',target:'e9',type:'associated with'},{id:'r9',source:'e1',target:'e12',type:'owns'},{id:'r10',source:'e1',target:'e13',type:'owns'},{id:'r11',source:'e1',target:'e14',type:'owns'},{id:'r12',source:'e1',target:'e15',type:'lives at'},{id:'r13',source:'e1',target:'e16',type:'lives at'},{id:'r14',source:'e2',target:'e14',type:'lives at'},{id:'r15',source:'e2',target:'e11',type:'associated with'},{id:'r16',source:'e1',target:'e11',type:'associated with'},{id:'r17',source:'e11',target:'e7',type:'associated with'},{id:'r18',source:'e10',target:'e18',type:'created'},{id:'r19',source:'e9',target:'e18',type:'associated with'},{id:'r20',source:'e14',target:'e17',type:'located at'},{id:'r21',source:'e3',target:'e12',type:'associated with'},{id:'r22',source:'e7',target:'e14',type:'associated with'},{id:'r23',source:'e4',target:'e13',type:'associated with'},{id:'r24',source:'e5',target:'e13',type:'associated with'}]},usecase3:{version:1,entities:[
-		{id:'e1',type:'person',name:'Jürgen Mossack',metadata:{'Full name':'Jürgen Mossack','Occupation':'Lawyer and co-founder of Mossack Fonseca','Nationality':'German','Address':'Panama City, Panama','Latitude':'8.9824','Longitude':'-79.5199','Source':'Public legal records and media reporting','Notes':'One of the founders of the law firm at the center of the leaked offshore finance network.'},x:.28,y:.32},
-		{id:'e2',type:'person',name:'Ramón Fonseca Mora',metadata:{'Full name':'Ramón Fonseca Mora','Occupation':'Lawyer and co-founder of Mossack Fonseca','Nationality':'Panamanian','Address':'Panama City, Panama','Latitude':'8.9824','Longitude':'-79.5199','Source':'Public legal records and media reporting','Notes':'Co-founder of Mossack Fonseca, linked to offshore structures and legal controversy.'},x:.58,y:.32},
-		{id:'e3',type:'organization',name:'Mossack Fonseca',metadata:{'Official name':'Mossack Fonseca & Co.','Organization type':'Law firm','Website':'https://www.mossfonseca.com','Address':'Panama City, Panama','Latitude':'8.9824','Longitude':'-79.5199','Source':'Firm records and public reporting','Notes':'The law firm central to the Panama Papers leak, creating shell companies and offshore structures.'},x:.44,y:.58},
-		{id:'e4',type:'organization',name:'ICIJ',metadata:{'Official name':'International Consortium of Investigative Journalists','Organization type':'Investigative journalism network','Website':'https://www.icij.org','Address':'Washington, D.C., USA','Latitude':'38.9072','Longitude':'-77.0369','Source':'Media and reporting records','Notes':'The nonprofit journalism network that coordinated the Panama Papers investigation and published the findings.'},x:.18,y:.67},
-		{id:'e5',type:'organization',name:'Süddeutsche Zeitung',metadata:{'Official name':'Süddeutsche Zeitung','Organization type':'Newspaper','Website':'https://www.sueddeutsche.de','Address':'Munich, Germany','Latitude':'48.1372','Longitude':'11.5755','Source':'Media records','Notes':'German newspaper that received the original leak of 11.5 million documents from an anonymous source.'},x:.10,y:.20},
-		{id:'e6',type:'organization',name:'Offshore shell company network',metadata:{'Official name':'Offshore shell company network','Organization type':'Corporate secrecy network','Address':'Global','Latitude':'20.0000','Longitude':'-20.0000','Source':'Public investigative summaries','Notes':'A broad network of entities used to obscure ownership, transfer funds, and conceal political or financial interests.'},x:.69,y:.71},
-		{id:'e7',type:'organization',name:'Panama Papers',metadata:{'Official name':'Panama Papers','Organization type':'Leaked financial documents','Address':'Global','Latitude':'10.0000','Longitude':'-80.0000','Source':'Journalistic investigation','Notes':'A historic leak of documents exposing offshore structures, hidden wealth, and cross-border financial secrecy.'},x:.52,y:.12},
-		{id:'e8',type:'location',name:'Panama City, Panama',metadata:{'Location name':'Panama City','Address':'Panama City, Panama','Latitude':'8.9824','Longitude':'-79.5199','Type':'Capital city','Source':'Geographic reference','Notes':'The center of the legal and financial operations behind the offshore structures exposed by the papers.'},x:.80,y:.72},
-		{id:'e9',type:'person',name:'David Cameron',metadata:{'Full name':'David Cameron','Occupation':'Former Prime Minister of the United Kingdom','Nationality':'British','Address':'London, United Kingdom','Latitude':'51.5074','Longitude':'-0.1278','Source':'Public office and media records','Notes':'Former UK prime minister whose family’s Blairmore Holdings offshore trust was exposed by the leak.'},x:.76,y:.10},
-		{id:'e10',type:'company',name:'Blairmore Holdings',metadata:{'Legal name':'Blairmore Holdings Inc.','Industry':'Investment fund','Address':'Panama / British Virgin Islands','Source':'Panama Papers disclosures','Notes':'Offshore investment fund linked to David Cameron’s father, revealed in the leaked records.'},x:.88,y:.22},
-		{id:'e11',type:'person',name:'Sigmundur Davíð Gunnlaugsson',metadata:{'Full name':'Sigmundur Davíð Gunnlaugsson','Occupation':'Former Prime Minister of Iceland','Nationality':'Icelandic','Address':'Reykjavík, Iceland','Latitude':'64.1466','Longitude':'-21.9426','Source':'Public office and media records','Notes':'Icelandic prime minister who resigned after the leak revealed his Wintris Inc offshore stake.'},x:.08,y:.42},
-		{id:'e12',type:'company',name:'Wintris Inc',metadata:{'Legal name':'Wintris Inc.','Industry':'Offshore holding company','Address':'British Virgin Islands','Source':'Panama Papers disclosures','Notes':'Shell company owned by Sigmundur Davíð Gunnlaugsson and his wife, with claims on Icelandic banks.'},x:.16,y:.56},
-		{id:'e13',type:'person',name:'Vladimir Putin',metadata:{'Full name':'Vladimir Putin','Occupation':'President of Russia','Nationality':'Russian','Address':'Moscow, Russia','Latitude':'55.7558','Longitude':'37.6173','Source':'Public records and investigative reporting','Notes':'Russian president whose inner circle was linked to offshore trails in the leaked documents.'},x:.60,y:.86},
-		{id:'e14',type:'person',name:'Sergei Roldugin',metadata:{'Full name':'Sergei Roldugin','Occupation':'Cellist and businessman','Nationality':'Russian','Address':'St. Petersburg, Russia','Latitude':'59.9343','Longitude':'30.3351','Source':'Investigative reporting','Notes':'Cellist and close associate of Putin named in offshore company networks exposed by the papers.'},x:.48,y:.90},
-		{id:'e15',type:'person',name:'Nawaz Sharif',metadata:{'Full name':'Nawaz Sharif','Occupation':'Former Prime Minister of Pakistan','Nationality':'Pakistani','Address':'Lahore, Pakistan','Latitude':'31.5204','Longitude':'74.3587','Source':'Public office and court records','Notes':'Former Pakistani prime minister whose family’s offshore companies were exposed by the leak.'},x:.30,y:.60},
-		{id:'e16',type:'person',name:'Petro Poroshenko',metadata:{'Full name':'Petro Poroshenko','Occupation':'Former President of Ukraine','Nationality':'Ukrainian','Address':'Kyiv, Ukraine','Latitude':'50.4501','Longitude':'30.5234','Source':'Public office and media records','Notes':'Former Ukrainian president linked to an offshore holding company in the leaked records.'},x:.50,y:.30},
-		{id:'e17',type:'person',name:'Mauricio Macri',metadata:{'Full name':'Mauricio Macri','Occupation':'Former President of Argentina','Nationality':'Argentine','Address':'Buenos Aires, Argentina','Latitude':'-34.6037','Longitude':'-58.3816','Source':'Public office and media records','Notes':'Former Argentine president named in offshore company filings revealed by the papers.'},x:.70,y:.44},
-		{id:'e18',type:'person',name:'Daphne Caruana Galizia',metadata:{'Full name':'Daphne Caruana Galizia','Occupation':'Investigative journalist','Nationality':'Maltese','Address':'Valletta, Malta','Latitude':'35.8989','Longitude':'14.5146','Source':'Media and reporting records','Notes':'Maltese journalist who investigated Panama Papers links in Malta and was assassinated in 2017.'},x:.36,y:.76}
-	],relationships:[{id:'r1',source:'e1',target:'e3',type:'works at'},{id:'r2',source:'e2',target:'e3',type:'works at'},{id:'r3',source:'e3',target:'e7',type:'associated with'},{id:'r4',source:'e4',target:'e7',type:'reported on'},{id:'r5',source:'e5',target:'e7',type:'reported on'},{id:'r6',source:'e3',target:'e6',type:'created'},{id:'r7',source:'e3',target:'e8',type:'located at'},{id:'r8',source:'e8',target:'e7',type:'related to'},{id:'r9',source:'e9',target:'e10',type:'family of'},{id:'r10',source:'e9',target:'e3',type:'associated with'},{id:'r11',source:'e11',target:'e12',type:'owns'},{id:'r12',source:'e11',target:'e3',type:'associated with'},{id:'r13',source:'e12',target:'e7',type:'mentioned in'},{id:'r14',source:'e13',target:'e14',type:'associated with'},{id:'r15',source:'e14',target:'e3',type:'associated with'},{id:'r16',source:'e13',target:'e6',type:'associated with'},{id:'r17',source:'e15',target:'e3',type:'associated with'},{id:'r18',source:'e16',target:'e3',type:'associated with'},{id:'r19',source:'e17',target:'e3',type:'associated with'},{id:'r20',source:'e18',target:'e7',type:'reported on'},{id:'r21',source:'e7',target:'e6',type:'exposed'},{id:'r22',source:'e9',target:'e7',type:'mentioned in'},{id:'r23',source:'e11',target:'e7',type:'mentioned in'},{id:'r24',source:'e13',target:'e7',type:'mentioned in'},{id:'r25',source:'e15',target:'e7',type:'mentioned in'},{id:'r26',source:'e16',target:'e7',type:'mentioned in'},{id:'r27',source:'e17',target:'e7',type:'mentioned in'}]}}; const seed=usecases.usecase1;
-		const savedState=loadSavedState();let currentUsecase=usecases[savedState.currentUsecase]?savedState.currentUsecase:'usecase1';
-		let data=savedState.data||structuredClone(seed),selectedId=data.entities.some(e=>e.id===savedState.selectedId)?savedState.selectedId:data.entities[0]?.id||null,activeType='all',activeView='network',layoutMode=['free','random','circular','radial','tree','cluster'].includes(savedState.layoutMode)?savedState.layoutMode:'free',mapInstance=null,mapMarkers=null,dragId=null,hasDragged=false,layoutDirty=false;
-		const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-		function loadSavedState(){try{const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(parsed&&Array.isArray(parsed.entities)&&Array.isArray(parsed.relationships))return{data:parsed};if(parsed?.data&&Array.isArray(parsed.data.entities)&&Array.isArray(parsed.data.relationships))return parsed}catch(e){console.warn('Could not load saved workspace',e)}return{data:structuredClone(seed)}}
-		function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:2,data,currentUsecase,selectedId,layoutMode}))}catch(e){console.warn('Could not save workspace',e)}}
-		function confirmLoadUsecase(usecaseId){
-			if(!usecases[usecaseId]) return;
-			const label=usecaseId==='usecase1'?'Pablo Escobar cartel':usecaseId==='usecase2'?'Jeffrey Epstein case':'Panama Papers';
-			openModal(`<div class="modal-header"><h2>Load case</h2><button class="icon-btn" data-close>×</button></div><div class="modal-body"><p style="margin:0;color:#dfe7f6;line-height:1.6">Load <strong>${label}</strong>? You will lose your current information.</p></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button type="button" class="primary" id="confirmLoadUsecaseBtn">Load</button></div>`);
-			$('#confirmLoadUsecaseBtn').onclick=()=>{
-				loadUsecase(usecaseId);
-				closeModal();
+		(() => {
+			const STORAGE_KEY = 'threadline-osint-v1';
+			const typeInfo = {
+				person: { label: 'Person', icon: '♙', color: '#a99aff', bg: '#2a2540', fields: ['Full name', 'Aliases', 'Date of birth', 'Nationality', 'Occupation', 'Email', 'Phone', 'Address', 'Latitude', 'Longitude', 'Source', 'Notes'] },
+				company: { label: 'Company', icon: '▦', color: '#65d6c1', bg: '#1c3435', fields: ['Legal name', 'Registration number', 'Website', 'Industry', 'Founded', 'Address', 'Latitude', 'Longitude', 'Source', 'Notes'] },
+				school: { label: 'School / university', icon: '⌂', color: '#71b9ff', bg: '#1e2d42', fields: ['Official name', 'Institution type', 'Website', 'Address', 'Latitude', 'Longitude', 'Source', 'Notes'] },
+				location: { label: 'Location', icon: '⌖', color: '#ffb86b', bg: '#3b2d20', fields: ['Location name', 'Address', 'Latitude', 'Longitude', 'Type', 'Source', 'Notes'] },
+				online_account: { label: 'Online account', icon: '◎', color: '#ff8da1', bg: '#3b252f', fields: ['Username', 'Platform', 'Profile URL', 'Email', 'Created', 'Source', 'Notes'] },
+				vehicle: { label: 'Vehicle', icon: '▰', color: '#80c7ff', bg: '#203140', fields: ['Make / model', 'Registration', 'VIN', 'Color', 'Owner', 'Source', 'Notes'] },
+				organization: { label: 'Organization', icon: '⬡', color: '#ffc875', bg: '#3a3022', fields: ['Official name', 'Organization type', 'Website', 'Address', 'Latitude', 'Longitude', 'Source', 'Notes'] }
 			};
-			bindClose();
-		}
-		function bindUsecaseButtons(){
-			$$('.usecase-btn').forEach(btn=>{
-				btn.classList.toggle('active', btn.dataset.usecase===currentUsecase);
-				btn.onclick=()=>confirmLoadUsecase(btn.dataset.usecase);
-			});
-		}
-		function loadUsecase(usecaseId){
-			if(!usecases[usecaseId]) return;
-			currentUsecase=usecaseId;
-			data=structuredClone(usecases[usecaseId]);
-			selectedId=data.entities[0]?.id||null;
-			layoutDirty=true;
-			activeType='all';
-			$('#sideSearch').value='';
-			$('#globalSearch').value='';
-			const usecaseSelect=$('#usecaseSelect');if(usecaseSelect)usecaseSelect.value=currentUsecase;
-			save();
-			bindUsecaseButtons();
-			render();
-		}
-		function entity(id){return data.entities.find(e=>e.id===id)}
-		function related(id){return data.relationships.filter(r=>r.source===id||r.target===id)}
-		function highlightConnections(id){const neighbors=new Set([id]);data.relationships.forEach(r=>{if(r.source===id)neighbors.add(r.target);else if(r.target===id)neighbors.add(r.source)});$$('#graph .node').forEach(n=>n.classList.toggle('dimmed',!neighbors.has(n.dataset.id)));$$('#graph .edge-g').forEach(g=>{const on=g.dataset.source===id||g.dataset.target===id;g.classList.toggle('highlighted',on);g.classList.toggle('dimmed',!on)})}
-		function clearHighlight(){$$('#graph .node.dimmed').forEach(n=>n.classList.remove('dimmed'));$$('#graph .edge-g.highlighted, #graph .edge-g.dimmed').forEach(g=>g.classList.remove('highlighted','dimmed'))}
-		function shortName(e){return e.name.length>20?e.name.slice(0,18)+'…':e.name}
-		function render(){bindUsecaseButtons();renderList();renderInspector();renderGraph();renderMap();$('#entityCount').textContent=data.entities.length;$('#edgeCount').textContent=`${data.relationships.length} connection${data.relationships.length===1?'':'s'}`;$('#emptyState').classList.toggle('show',!data.entities.length&&activeView==='network')}
-		function renderFilters(){const types=['all',...Object.keys(typeInfo)];$('#typeFilters').innerHTML=types.map(t=>`<button class="type-chip ${activeType===t?'active':''}" data-type="${t}">${t==='all'?'All':typeInfo[t].label}</button>`).join('');$$('.type-chip').forEach(b=>b.onclick=()=>{activeType=b.dataset.type;renderFilters();renderList()})}
-		function renderList(){renderFilters();const query=$('#sideSearch').value.trim().toLowerCase();const list=data.entities.filter(e=>(activeType==='all'||e.type===activeType)&&(`${e.name} ${typeInfo[e.type]?.label||''}`).toLowerCase().includes(query));$('#entityList').innerHTML=list.map(e=>{const t=typeInfo[e.type]||typeInfo.organization;return `<div class="entity-row ${e.id===selectedId?'selected':''}" data-id="${escapeHtml(e.id)}"><div class="entity-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div class="entity-copy"><div class="entity-name">${escapeHtml(e.name)}</div><div class="entity-type">${t.label}</div></div><span class="entity-count">${related(e.id).length}</span></div>`}).join('')||`<div style="padding:18px 10px;color:var(--faint);font-size:11px">No matching entities</div>`;$$('.entity-row').forEach(row=>row.onclick=()=>select(row.dataset.id))}
-		function select(id){selectedId=id;save();render()}
-		function renderInspector(){const e=entity(selectedId),ins=$('#inspector');if(!e){ins.innerHTML='<div class="no-selection"><div><div class="target">⌖</div>Select an entity on the graph or add one to view its details.</div></div>';return}const t=typeInfo[e.type]||typeInfo.organization;const fields=Object.keys(e.metadata||{});const links=related(e.id);ins.innerHTML=`<div class="inspector-head"><span class="eyebrow">Entity details</span><button class="icon-btn" id="closeInspector" title="Clear selection">×</button></div><div class="detail-hero"><div class="hero-top"><div class="hero-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div><div class="hero-title">${escapeHtml(e.name)}</div><div class="hero-type">${t.label}</div></div></div><div class="hero-actions"><button class="small-button" id="connectSelected">＋ Connect</button><button class="small-button danger" id="deleteSelected">Delete</button></div></div><section class="section"><div class="section-title">Metadata <button class="metadata-add" id="addMetadata">＋ Add field</button></div><div id="metadataFields">${fields.map((key,i)=>`<div class="field"><label>${escapeHtml(key)}</label>${key==='Notes'?`<textarea data-key="${escapeHtml(key)}" placeholder="Add context…">${escapeHtml(e.metadata[key])}</textarea>`:`<input data-key="${escapeHtml(key)}" value="${escapeHtml(e.metadata[key])}" placeholder="Not recorded" />`}</div>`).join('')}</div><div class="map-fields-note">To map an entity, enter Latitude and Longitude (decimal degrees) in its metadata.</div></section><section class="section"><div class="section-title">Connections <span class="count">${links.length}</span></div><div class="relation-list">${links.map(r=>{const other=entity(r.source===e.id?r.target:r.source);return other?`<div class="relation" data-id="${escapeHtml(other.id)}"><span class="rel-line"></span><span>${escapeHtml(other.name)}</span><span class="rel-kind">${escapeHtml(r.type)}</span></div>`:''}).join('')||'<div style="color:var(--faint);font-size:11px">No connections yet</div>'}</div></section>`;
-			$('#closeInspector').onclick=()=>{selectedId=null;render()};$('#connectSelected').onclick=()=>openConnect(e.id);$('#deleteSelected').onclick=()=>deleteEntity(e.id);$('#addMetadata').onclick=()=>addMetadataField(e.id);$$('#metadataFields input, #metadataFields textarea').forEach(input=>input.onchange=()=>{e.metadata[input.dataset.key]=input.value;if(input.dataset.key==='Full name'||input.dataset.key==='Legal name'||input.dataset.key==='Official name'||input.dataset.key==='Location name'||input.dataset.key==='Username')e.name=input.value.trim()||e.name;save();renderList();renderGraph();renderMap()});$$('.relation').forEach(row=>row.onclick=()=>select(row.dataset.id))}
-		function getLayoutRoot(){if(selectedId&&entity(selectedId))return entity(selectedId);return data.entities.reduce((best,current)=>{const currentDegree=(data.relationships.filter(r=>r.source===current.id||r.target===current.id)).length;const bestDegree=best?(data.relationships.filter(r=>r.source===best.id||r.target===best.id)).length:-1;return !best||currentDegree>bestDegree?current:best;},data.entities[0]||null)}
-		function applyForcedLayout(){if(layoutMode==='free')return;const nodes=data.entities;const count=nodes.length||1;const root=getLayoutRoot();if(!root)return;const centerX=.5,centerY=.5;if(layoutMode==='random'){nodes.forEach((node,index)=>{const seedA=(index*37)%97;const seedB=(index*53)%89;node.x=.1+(seedA/97)*.8;node.y=.12+(seedB/89)*.7;});return}if(layoutMode==='circular'){nodes.forEach((node,index)=>{const angle=(index/count)*Math.PI*2-Math.PI/2;node.x=.5+Math.cos(angle)*.34;node.y=.5+Math.sin(angle)*.32;});return}if(layoutMode==='radial'){const others=nodes.filter(n=>n.id!==root.id);const max=Math.max(1,others.length);root.x=centerX;root.y=centerY;others.forEach((node,index)=>{const angle=(index/max)*Math.PI*2;const r=.18+((index%4)*.08);node.x=centerX+Math.cos(angle)*r;node.y=centerY+Math.sin(angle)*r;});return}if(layoutMode==='cluster'){const groups=new Map();nodes.forEach(node=>{const key=node.type||'organization';if(!groups.has(key))groups.set(key,[]);groups.get(key).push(node)});const keys=[...groups.keys()].sort((a,b)=>groups.get(b).length-groups.get(a).length);const total=Math.max(1,keys.length);keys.forEach((key,gi)=>{const members=groups.get(key);const angle=(gi/total)*Math.PI*2-Math.PI/2;const cx=.5+Math.cos(angle)*.30;const cy=.5+Math.sin(angle)*.28;const n=members.length;if(n===1){members[0].x=cx;members[0].y=cy;return}const r=.04+Math.min(n,12)*.008;members.forEach((node,mi)=>{const a=(mi/n)*Math.PI*2-Math.PI/2;node.x=cx+Math.cos(a)*r;node.y=cy+Math.sin(a)*r;})});return}if(layoutMode==='tree'){const children=new Map(nodes.map(node=>[node.id,[]]));data.relationships.forEach(r=>{if(r.source&&r.target)children.get(r.source)?.push(r.target);});const levels=new Map();const queue=[root];levels.set(root.id,0);const seen=new Set([root.id]);while(queue.length){const current=queue.shift();const currentLevel=levels.get(current.id)||0;for(const childId of children.get(current.id)||[]){if(seen.has(childId))continue;seen.add(childId);const child=entity(childId);if(child){levels.set(childId,currentLevel+1);queue.push(child)}}}const maxLevel=Math.max(...Array.from(levels.values()),0);const levelBuckets=new Map();for(const node of nodes){const level=levels.get(node.id)||0;if(!levelBuckets.has(level))levelBuckets.set(level,[]);levelBuckets.get(level).push(node)}root.x=.5;root.y=.12;for(let level=0;level<=maxLevel;level++){const bucket=levelBuckets.get(level)||[];const total=bucket.length||1;bucket.forEach((node,index)=>{const slot=(index+1)/(total+1);node.x=.12+slot*.76;node.y=.12+level*.18;})}}}
-			let graphZoom=1;
-	function setZoom(z){graphZoom=Math.max(.5,Math.min(3,z));const zl=$('#zoomLevel');if(zl)zl.textContent=Math.round(graphZoom*100)+'%';renderGraph()}
-	function renderGraph(){
-			const svg=$('#graph'),wrap=$('#canvasWrap'),w=wrap.clientWidth,h=wrap.clientHeight;
-			const vbW=w/graphZoom,vbH=h/graphZoom;
-		svg.setAttribute('viewBox',`${((w-vbW)/2).toFixed(1)} ${((h-vbH)/2).toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}`);
-			svg.style.display=activeView==='network'?'block':'none';
-			if(activeView!=='network')return;
-			if(layoutDirty){applyForcedLayout();layoutDirty=false;save()}
-			const pos=new Map(data.entities.map(e=>[e.id,graphPoint(e)]));
-			const edgeMarkup=data.relationships.map(r=>{const a=pos.get(r.source),b=pos.get(r.target);if(!a||!b)return'';const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;return `<g class="edge-g" data-source="${escapeHtml(r.source)}" data-target="${escapeHtml(r.target)}"><line class="edge" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/><text class="edge-label" x="${mx}" y="${my-5}" text-anchor="middle">${escapeHtml(r.type)}</text></g>`}).join('');
-			const nodeRadius=e=>16+Math.min(related(e.id).length,12)*1.6;
-			const nodes=data.entities.map(e=>{const p=pos.get(e.id),t=typeInfo[e.type]||typeInfo.organization,selected=e.id===selectedId,r=nodeRadius(e);return `<g class="node ${selected?'selected':''}" data-id="${escapeHtml(e.id)}" transform="translate(${p.x} ${p.y})"><circle class="node-halo" r="${(r+11).toFixed(1)}"/><circle class="node-circle" r="${r.toFixed(1)}" fill="${t.bg}"/><text x="0" y="${(r*0.35).toFixed(1)}" text-anchor="middle" fill="${t.color}" font-size="${(r*0.75).toFixed(1)}">${t.icon}</text><text class="node-label" x="0" y="${(r+16).toFixed(1)}">${escapeHtml(shortName(e))}</text><text class="node-sub" x="0" y="${(r+29).toFixed(1)}">${escapeHtml(t.label)}</text></g>`}).join('');
-			svg.innerHTML=edgeMarkup+nodes;
-			svg.onpointerdown=ev=>{const node=ev.target.closest('.node');if(!node)return;clearHighlight();dragId=node.dataset.id;hasDragged=false;svg.setPointerCapture(ev.pointerId)};
-			svg.onpointermove=ev=>{if(!dragId)return;const rect=wrap.getBoundingClientRect(),e=entity(dragId);if(!e)return;const zc=(1-1/graphZoom)/2;e.x=Math.max(.04,Math.min(.96,zc+(ev.clientX-rect.left)/(w*graphZoom)));e.y=Math.max(.07,Math.min(.93,zc+(ev.clientY-rect.top)/(h*graphZoom)));hasDragged=true;renderGraph()};
-			svg.onpointerup=()=>{if(!dragId)return;const id=dragId;dragId=null;if(hasDragged)save();else select(id)};
-			svg.onpointercancel=()=>{dragId=null};
-			svg.onpointerover=ev=>{const node=ev.target.closest('.node');if(!node||dragId)return;highlightConnections(node.dataset.id)};
-			svg.onpointerout=ev=>{const node=ev.target.closest('.node');if(!node)return;if(ev.relatedTarget&&node.contains(ev.relatedTarget))return;clearHighlight()};svg.onwheel=ev=>{ev.preventDefault();setZoom(graphZoom*(ev.deltaY<0?1.12:1/1.12))};
-		}
-		function graphPoint(e){const w=$('#canvasWrap').clientWidth,h=$('#canvasWrap').clientHeight;return{x:(e.x??.5)*w,y:(e.y??.5)*h}}
-		function coordinates(e){const m=e.metadata||{};const lat=Number(m.Latitude),lon=Number(m.Longitude);return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180&&(m.Latitude!==''&&m.Longitude!=='')?[lat,lon]:null}
-		function renderMap(){if(activeView!=='map'||!mapInstance)return;if(mapMarkers){mapMarkers.clearLayers()}else mapMarkers=L.layerGroup().addTo(mapInstance);const points=[];for(const e of data.entities){const coords=coordinates(e);if(!coords)continue;points.push(coords);const t=typeInfo[e.type]||typeInfo.organization;const marker=L.circleMarker(coords,{radius:6+Math.min(related(e.id).length,12)*0.7,color:t.color,fillColor:t.color,fillOpacity:.9,weight:2}).bindPopup(`<strong>${escapeHtml(e.name)}</strong><br><small>${escapeHtml(t.label)} · ${coords[0]}, ${coords[1]}</small>`);marker.on('click',()=>select(e.id));mapMarkers.addLayer(marker)}$('#mapEmpty').classList.toggle('show',points.length===0);if(points.length===1)mapInstance.setView(points[0],12);else if(points.length>1)mapInstance.fitBounds(points,{padding:[45,45],maxZoom:12})}
-		function setView(view){activeView=view;$$('.view-tab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));$('#mapPanel').classList.toggle('active',view==='map');$('#canvasHint').style.display=view==='network'?'':'none';if(view==='map'){if(location.protocol==='file:'){$('#mapEmpty').innerHTML='<div><strong>Map tiles disabled for local-file use</strong>Run this app from an HTTP(S) address so tile requests include a valid referrer.</div>';$('#mapEmpty').classList.add('show');return}if(!window.L){$('#mapEmpty').classList.add('show');$('#mapEmpty').innerHTML='<div><strong>Map library unavailable</strong>Reconnect to load the map view.</div>';return}if(!mapInstance){mapInstance=L.map('map').setView([20,0],2);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'}).addTo(mapInstance);mapMarkers=L.layerGroup().addTo(mapInstance)}setTimeout(()=>{mapInstance.invalidateSize();renderMap()},80)}else renderGraph()}
-		function openModal(content){$('#modal').innerHTML=content;$('#modalBackdrop').classList.add('open')}
-		function closeModal(){$('#modalBackdrop').classList.remove('open')}
-		function addEntity(){openModal(`<div class="modal-header"><h2>Add entities</h2><button class="icon-btn" data-close>×</button></div><form id="entityForm"><div class="modal-body"><div class="form-field"><label for="entityType">Entity type</label><select id="entityType">${Object.entries(typeInfo).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select><small>Each type starts with a useful set of metadata fields.</small></div><div class="form-field"><label for="entityNames">Names / identifiers</label><textarea id="entityNames" required rows="4" placeholder="e.g. Jordan Rivera, Casey Morgan, Acme Research" autofocus></textarea><small>Enter one or more names separated by commas.</small></div><div class="connection-preview" id="fieldPreview"></div></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button class="primary" id="createEntitiesBtn" type="submit">Create entities</button></div></form>`);const type=$('#entityType'),names=$('#entityNames'),submit=$('#createEntitiesBtn');const preview=()=>$('#fieldPreview').innerHTML=`Default metadata: ${(typeInfo[type.value].fields||[]).slice(0,6).join(' · ')}${typeInfo[type.value].fields.length>6?'…':''}`;const updateCount=()=>{const count=[...new Set(names.value.split(',').map(name=>name.trim()).filter(Boolean).map(name=>name.toLocaleLowerCase()))].length;submit.textContent=count===1?'Create 1 entity':`Create ${count||'…'} entities`};type.onchange=preview;names.oninput=updateCount;preview();updateCount();names.focus();$('#entityForm').onsubmit=ev=>{ev.preventDefault();const t=type.value,uniqueNames=[...new Map(names.value.split(',').map(name=>name.trim()).filter(Boolean).map(name=>[name.toLocaleLowerCase(),name])).values()];if(!uniqueNames.length){names.setCustomValidity('Enter at least one name.');names.reportValidity();return}names.setCustomValidity('');const metadataFields=typeInfo[t].fields;const created=uniqueNames.map(name=>({id:crypto.randomUUID(),type:t,name,metadata:Object.fromEntries(metadataFields.map(field=>[field,''])),x:.18+Math.random()*.64,y:.17+Math.random()*.65}));data.entities.push(...created);selectedId=created[0].id;layoutDirty=true;save();closeModal();render()};bindClose()}
-		function openConnect(sourceId){if(data.entities.length<2){alert('Add another entity before creating a connection.');return}const sources=data.entities.map(e=>`<option value="${escapeHtml(e.id)}" ${e.id===sourceId?'selected':''}>${escapeHtml(e.name)}</option>`).join('');const targets=data.entities.filter(e=>e.id!==sourceId).map(e=>`<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)}</option>`).join('');openModal(`<div class="modal-header"><h2>Create a connection</h2><button class="icon-btn" data-close>×</button></div><form id="connectForm"><div class="modal-body"><div class="form-row"><div class="form-field"><label for="relSource">From</label><select id="relSource">${sources}</select></div><div class="form-field"><label for="relType">Relationship</label><select id="relType">${relationships.map(r=>`<option>${r}</option>`).join('')}</select></div></div><div class="form-field"><label for="relTarget">To</label><select id="relTarget">${targets}</select></div></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button class="primary" type="submit">Add connection</button></div></form>`);$('#connectForm').onsubmit=ev=>{ev.preventDefault();const source=$('#relSource').value,target=$('#relTarget').value,type=$('#relType').value;if(source===target)return;if(data.relationships.some(r=>r.source===source&&r.target===target&&r.type===type)){alert('That connection already exists.');return}data.relationships.push({id:crypto.randomUUID(),source,target,type});layoutDirty=true;save();
-			closeModal();render()};bindClose()}
-		function addMetadataField(id){const key=prompt('Field name');if(!key?.trim())return;const e=entity(id);if(Object.hasOwn(e.metadata,key.trim())){alert('This field already exists.');return}e.metadata[key.trim()]='';save();renderInspector()}
-		function deleteEntity(id){const e=entity(id);if(!e)return;if(!confirm(`Delete “${e.name}” and its connections?`))return;data.entities=data.entities.filter(x=>x.id!==id);data.relationships=data.relationships.filter(r=>r.source!==id&&r.target!==id);selectedId=data.entities[0]?.id||null;layoutDirty=true;save();render()}
-		function bindClose(){$$('[data-close]').forEach(b=>b.onclick=closeModal)}
-		function exportJson(){const blob=new Blob([JSON.stringify({schema:'threadline-network',version:1,exportedAt:new Date().toISOString(),entities:data.entities,relationships:data.relationships},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='threadline-network.json';a.click();URL.revokeObjectURL(a.href)}
-		function importJson(file){const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);const entities=parsed.entities||parsed.nodes,relationships=parsed.relationships||parsed.edges;if(!Array.isArray(entities)||!Array.isArray(relationships))throw Error('JSON must include entities and relationships arrays.');const fixedEntities=entities.map((e,i)=>({id:String(e.id||`import-${i}-${crypto.randomUUID()}`),type:typeInfo[e.type]?e.type:'organization',name:String(e.name||e.label||`Entity ${i+1}`),metadata:e.metadata&&typeof e.metadata==='object'?e.metadata:{},x:Number.isFinite(e.x)?e.x:.2+Math.random()*.6,y:Number.isFinite(e.y)?e.y:.2+Math.random()*.6}));const ids=new Set(fixedEntities.map(e=>e.id));const fixedRelations=relationships.filter(r=>ids.has(String(r.source??r.from))&&ids.has(String(r.target??r.to))).map(r=>({id:String(r.id||crypto.randomUUID()),source:String(r.source??r.from),target:String(r.target??r.to),type:String(r.type||r.label||'associated with')}));data={version:1,entities:fixedEntities,relationships:fixedRelations};selectedId=fixedEntities[0]?.id||null;layoutDirty=true;save();render();alert(`Imported ${fixedEntities.length} entities and ${fixedRelations.length} connections.`)}catch(err){alert(`Could not import JSON: ${err.message}`)}};reader.readAsText(file)}
-		$('#addEntityBtn').onclick=addEntity;$('#zoomIn').onclick=()=>setZoom(graphZoom*1.25);$('#zoomOut').onclick=()=>setZoom(graphZoom/1.25);$('#exportBtn').onclick=exportJson;$('#importBtn').onclick=()=>$('#fileInput').click();$('#fileInput').onchange=ev=>{if(ev.target.files[0])importJson(ev.target.files[0]);ev.target.value=''};$('#usecaseSelect').onchange=ev=>{const value=ev.target.value;if(!value)return;confirmLoadUsecase(value);ev.target.value=currentUsecase;};$('#layoutSelect').onchange=ev=>{layoutMode=ev.target.value;layoutDirty=true;render();save();};$$('.view-tab').forEach(b=>b.onclick=()=>setView(b.dataset.view));$('#sideSearch').oninput=renderList;$('#globalSearch').oninput=()=>{$('#sideSearch').value=$('#globalSearch').value;renderList();const match=data.entities.find(e=>e.name.toLowerCase().includes($('#globalSearch').value.toLowerCase()));if(match&&$('#globalSearch').value)select(match.id)};document.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeModal();if(ev.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){ev.preventDefault();$('#globalSearch').focus()}});$('#modalBackdrop').onclick=ev=>{if(ev.target.id==='modalBackdrop')closeModal()};window.addEventListener('resize',()=>{renderGraph();if(mapInstance)mapInstance.invalidateSize()});$('#usecaseSelect').value=currentUsecase;$('#layoutSelect').value=layoutMode;render();
-	})();
+			const relationships = ['knows', 'works at', 'studied at', 'lives at', 'owns', 'associated with', 'located at', 'family of', 'employed by', 'other'];
+			const usecases = {
+				usecase1: {
+					version: 1, entities: [
+						{ id: 'e1', type: 'person', name: 'Pablo Escobar', metadata: { 'Full name': 'Pablo Emilio Escobar Gaviria', 'Aliases': 'El Patrón, Don Pablo', 'Date of birth': 'December 1, 1949', 'Nationality': 'Colombian', 'Occupation': 'Drug lord, cartel leader', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Historical public records', 'Notes': 'Leader of the Medellín Cartel; notorious for cocaine trafficking and violent control of drug routes until his death in 1993, when the Search Bloc and Los Pepes closed in.' }, x: .38, y: .34 },
+						{ id: 'e2', type: 'organization', name: 'Medellín Cartel', metadata: { 'Official name': 'Medellín Cartel', 'Organization type': 'Drug trafficking organization', 'Website': 'https://en.wikipedia.org/wiki/Medell%C3%ADn_Cartel', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Historical reporting and legal archives', 'Notes': 'The cartel dominated cocaine trafficking in the 1970s and 1980s, operating globally through brokers and front companies.' }, x: .68, y: .28 },
+						{ id: 'e3', type: 'person', name: 'Jorge Luis Ochoa', metadata: { 'Full name': 'Jorge Luis Ochoa Vásquez', 'Aliases': 'Jorge Ochoa', 'Date of birth': 'April 15, 1950', 'Nationality': 'Colombian', 'Occupation': 'Drug trafficker', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Public court and historical records', 'Notes': 'One of the key co-founders of the Medellín Cartel network and a major smuggling partner.' }, x: .72, y: .56 },
+						{ id: 'e4', type: 'person', name: 'Gustavo Gaviria', metadata: { 'Full name': 'Gustavo Gaviria', 'Date of birth': '1950', 'Nationality': 'Colombian', 'Occupation': 'Drug trafficker and logistics manager', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Biographical and journalistic reporting', 'Notes': 'Trusted lieutenant in the Medellín network, involved in trafficking and operational logistics.' }, x: .31, y: .67 },
+						{ id: 'e5', type: 'person', name: 'Carlos Lehder', metadata: { 'Full name': 'Carlos Enrique Lehder Rivas', 'Aliases': 'The German narco', 'Date of birth': 'September 7, 1949', 'Nationality': 'Colombian / German', 'Occupation': 'Drug trafficker', 'Address': 'Bahamas / Medellín network', 'Latitude': '25.0343', 'Longitude': '-77.3963', 'Source': 'U.S. court documents and biographical accounts', 'Notes': 'A senior co-conspirator who used Caribbean logistics hubs, including Norman’s Cay in the Bahamas, to move cocaine toward the United States.' }, x: .18, y: .48 },
+						{ id: 'e6', type: 'person', name: 'Pacho Herrera', metadata: { 'Full name': 'José Guadalupe Herrera', 'Aliases': 'Pacho Herrera', 'Date of birth': '1944', 'Nationality': 'Colombian', 'Occupation': 'Drug trafficker and key supplier', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Historical investigation archives', 'Notes': 'Critical in the cartel’s production and distribution network, especially in cocaine processing and shipment coordination.' }, x: .55, y: .74 },
+						{ id: 'e7', type: 'location', name: 'Hacienda Nápoles', metadata: { 'Location name': 'Hacienda Nápoles', 'Address': 'Puerto Triunfo, Antioquia, Colombia', 'Latitude': '5.8789', 'Longitude': '-74.6937', 'Type': 'Estate / private compound', 'Source': 'Historical site and media archives', 'Notes': 'Escobar’s major private estate and a key symbol of his business empire, used for logistics, leisure, and political access.' }, x: .85, y: .41 },
+						{ id: 'e8', type: 'location', name: 'Medellín, Colombia', metadata: { 'Location name': 'Medellín', 'Address': 'Medellín, Antioquia, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Type': 'City', 'Source': 'OpenStreetMap and public geographic reference', 'Notes': 'The cartel’s base of operations and the center of its commercial and political reach.' }, x: .82, y: .72 },
+						{ id: 'e9', type: 'organization', name: 'Cocaine Trafficking Network', metadata: { 'Official name': 'Cocaine Trafficking Network', 'Organization type': 'Transnational criminal business', 'Address': 'Global corridor: Colombia → Caribbean → United States', 'Latitude': '9.0000', 'Longitude': '-74.0000', 'Source': 'Public investigative summaries', 'Notes': 'The operational business model combined transport, financing, corruption, and protection services across multiple countries.' }, x: .52, y: .14 },
+						{ id: 'e10', type: 'person', name: 'George Jung', metadata: { 'Full name': 'George Jacob Jung', 'Aliases': 'Boston George', 'Date of birth': 'August 6, 1942', 'Nationality': 'American', 'Occupation': 'Drug trafficker and smuggler', 'Address': 'Weymouth, Massachusetts, USA', 'Source': 'U.S. court documents and biographical accounts', 'Notes': 'American smuggler who partnered with the Medellín Cartel to move cocaine into the United States by air and sea.' }, x: .08, y: .30 },
+						{ id: 'e11', type: 'person', name: 'José Gonzalo Rodríguez Gacha', metadata: { 'Full name': 'José Gonzalo Rodríguez Gacha', 'Aliases': 'El Mexicano', 'Date of birth': 'May 14, 1947', 'Nationality': 'Colombian', 'Occupation': 'Drug trafficker and cartel co-founder', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Historical and court records', 'Notes': 'Co-founder of the Medellín Cartel who oversaw cocaine production and enforcement until his death in 1989.' }, x: .60, y: .16 },
+						{ id: 'e12', type: 'person', name: 'Jhon Jairo Velásquez', metadata: { 'Full name': 'Jhon Jairo Velásquez Vásquez', 'Aliases': 'Popeye', 'Date of birth': 'April 15, 1962', 'Nationality': 'Colombian', 'Occupation': 'Hitman and cartel enforcer', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Confessions, court records and media interviews', 'Notes': 'Notorious sicario who confessed to hundreds of killings carried out for the Medellín Cartel.' }, x: .70, y: .62 },
+						{ id: 'e13', type: 'organization', name: 'Cali Cartel', metadata: { 'Official name': 'Cali Cartel', 'Organization type': 'Drug trafficking organization', 'Website': 'https://en.wikipedia.org/wiki/Cali_Cartel', 'Address': 'Cali, Colombia', 'Latitude': '3.4516', 'Longitude': '-76.5320', 'Source': 'Historical reporting and court records', 'Notes': 'Rival trafficking organization based in Cali that absorbed Medellín routes after the cartel’s collapse.' }, x: .90, y: .20 },
+						{ id: 'e14', type: 'organization', name: 'Los Pepes', metadata: { 'Official name': 'Los Pepes', 'Organization type': 'Paramilitary vigilante group', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Investigative reporting and declassified documents', 'Notes': 'Persecution group formed to dismantle Escobar’s network, aligned with the Cali Cartel and state security forces.' }, x: .12, y: .66 },
+						{ id: 'e15', type: 'organization', name: 'Search Bloc', metadata: { 'Official name': 'Bloque de Búsqueda', 'Organization type': 'Police task force', 'Address': 'Colombia', 'Latitude': '4.5709', 'Longitude': '-74.2973', 'Source': 'Historical and government records', 'Notes': 'Colombian police unit created to hunt Escobar; its 1993 operation ended his reign.' }, x: .44, y: .48 },
+						{ id: 'e16', type: 'person', name: 'Roberto Escobar', metadata: { 'Full name': 'Roberto Escobar Gaviria', 'Aliases': 'El Osito', 'Date of birth': 'January 13, 1947', 'Nationality': 'Colombian', 'Occupation': 'Accountant and cartel manager', 'Address': 'Medellín, Colombia', 'Latitude': '6.2442', 'Longitude': '-75.5812', 'Source': 'Biographical and journalistic records', 'Notes': 'Pablo’s brother and the cartel’s chief accountant, who managed its finances and logistics.' }, x: .24, y: .20 },
+						{ id: 'e17', type: 'location', name: 'Miami, USA', metadata: { 'Location name': 'Miami', 'Address': 'Miami, Florida, USA', 'Latitude': '25.7617', 'Longitude': '-80.1918', 'Type': 'City', 'Source': 'Geographic reference', 'Notes': 'Primary U.S. distribution hub for Medellín cocaine through the 1980s.' }, x: .96, y: .56 },
+						{ id: 'e18', type: 'location', name: 'Norman’s Cay', metadata: { 'Location name': 'Norman’s Cay', 'Address': 'Exuma, Bahamas', 'Latitude': '24.6083', 'Longitude': '-76.8297', 'Type': 'Island', 'Source': 'Geographic and historical records', 'Notes': 'Carlos Lehder’s private island, used as a transshipment hub for cocaine flights to the United States.' }, x: .10, y: .12 }
+					], relationships: [{ id: 'r1', source: 'e1', target: 'e2', type: 'owns' }, { id: 'r2', source: 'e1', target: 'e3', type: 'associated with' }, { id: 'r3', source: 'e1', target: 'e4', type: 'associated with' }, { id: 'r4', source: 'e1', target: 'e5', type: 'associated with' }, { id: 'r5', source: 'e1', target: 'e6', type: 'associated with' }, { id: 'r6', source: 'e1', target: 'e7', type: 'owns' }, { id: 'r7', source: 'e1', target: 'e8', type: 'lives at' }, { id: 'r8', source: 'e2', target: 'e8', type: 'located at' }, { id: 'r9', source: 'e2', target: 'e9', type: 'operates' }, { id: 'r10', source: 'e3', target: 'e2', type: 'works at' }, { id: 'r11', source: 'e4', target: 'e2', type: 'works at' }, { id: 'r12', source: 'e5', target: 'e9', type: 'operates' }, { id: 'r13', source: 'e6', target: 'e2', type: 'works at' }, { id: 'r14', source: 'e7', target: 'e8', type: 'located at' }, { id: 'r15', source: 'e10', target: 'e1', type: 'associated with' }, { id: 'r16', source: 'e10', target: 'e2', type: 'associated with' }, { id: 'r17', source: 'e11', target: 'e2', type: 'works at' }, { id: 'r18', source: 'e12', target: 'e2', type: 'works at' }, { id: 'r19', source: 'e13', target: 'e9', type: 'associated with' }, { id: 'r20', source: 'e14', target: 'e1', type: 'associated with' }, { id: 'r21', source: 'e14', target: 'e13', type: 'associated with' }, { id: 'r22', source: 'e15', target: 'e1', type: 'associated with' }, { id: 'r23', source: 'e16', target: 'e2', type: 'works at' }, { id: 'r24', source: 'e16', target: 'e1', type: 'family of' }, { id: 'r25', source: 'e2', target: 'e17', type: 'associated with' }, { id: 'r26', source: 'e5', target: 'e18', type: 'lives at' }]
+				}, usecase2: {
+					version: 1, entities: [
+						{ id: 'e1', type: 'person', name: 'Jeffrey Epstein', metadata: { 'Full name': 'Jeffrey Edward Epstein', 'Aliases': 'Eppy, Bear', 'Date of birth': 'January 20, 1953', 'Nationality': 'American', 'Occupation': 'Financier; convicted sex offender', 'Address': 'New York City, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Source': 'U.S. court records (United States v. Epstein, 2019)', 'Notes': 'Financier who built a private fortune; pleaded guilty in 2008 to procuring a child for prostitution; died in a Manhattan jail cell on August 10, 2019.' }, x: 0.44, y: 0.32 },
+						{ id: 'e2', type: 'person', name: 'Ghislaine Maxwell', metadata: { 'Full name': 'Ghislaine Noelle Marion Maxwell', 'Date of birth': 'December 25, 1961', 'Nationality': 'British', 'Occupation': 'Socialite; Epstein’s associate', 'Address': 'New York City, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Source': 'U.S. court records (United States v. Maxwell, 2021)', 'Notes': 'Epstein’s longtime associate; convicted in December 2021 of sex trafficking of a minor and related charges; sentenced to 20 years.' }, x: 0.52, y: 0.4 },
+						{ id: 'e3', type: 'person', name: 'Les Wexner', metadata: { 'Full name': 'Leslie Herbert Wexner', 'Date of birth': 'September 8, 1937', 'Nationality': 'American', 'Occupation': 'Founder and CEO of L Brands', 'Address': 'Columbus, Ohio, USA', 'Latitude': '39.9612', 'Longitude': '-82.9988', 'Source': 'Press investigations (New York Times, 2019)', 'Notes': 'Billionaire founder of L Brands (Victoria’s Secret); Epstein managed his fortune and held power of attorney.' }, x: 0.62, y: 0.2 },
+						{ id: 'e4', type: 'person', name: 'Ehud Barak', metadata: { 'Full name': 'Ehud Barak', 'Date of birth': 'February 12, 1942', 'Nationality': 'Israeli', 'Occupation': 'Prime Minister of Israel (1999–2001)', 'Address': 'Tel Aviv, Israel', 'Latitude': '32.0853', 'Longitude': '34.7818', 'Source': 'Press investigations (Haaretz, 2019)', 'Notes': 'Former Israeli prime minister who invested in Epstein-backed funds and met him repeatedly.' }, x: 0.6, y: 0.52 },
+						{ id: 'e5', type: 'person', name: 'Bill Clinton', metadata: { 'Full name': 'William Jefferson Clinton', 'Date of birth': 'August 19, 1946', 'Nationality': 'American', 'Occupation': '42nd President of the United States', 'Address': 'Little Rock / New York, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Source': 'Flight logs reported by press (2019)', 'Notes': 'Flight logs showed the former president flew on Epstein’s aircraft multiple times; his office denied wrongdoing.' }, x: 0.3, y: 0.16 },
+						{ id: 'e6', type: 'person', name: 'Donald Trump', metadata: { 'Full name': 'Donald John Trump', 'Date of birth': 'June 14, 1946', 'Nationality': 'American', 'Occupation': 'Businessman; President of the United States', 'Address': 'New York City, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Source': 'Press investigations (2019)', 'Notes': 'Reported social acquaintance of Epstein in the 2000s; denied wrongdoing and said he had cut ties.' }, x: 0.22, y: 0.3 },
+						{ id: 'e7', type: 'person', name: 'Prince Andrew', metadata: { 'Full name': 'Prince Andrew, Duke of York', 'Date of birth': 'February 19, 1960', 'Nationality': 'British', 'Occupation': 'Member of the British royal family', 'Address': 'London, United Kingdom', 'Latitude': '51.5074', 'Longitude': '-0.1278', 'Source': 'Court records (Giuffre v. Maxwell, 2015–2022)', 'Notes': 'Accused by Virginia Giuffre of sexual abuse (denied); settled the civil case in 2022 without admitting liability; stepped back from royal duties in 2019.' }, x: 0.14, y: 0.44 },
+						{ id: 'e8', type: 'person', name: 'Steve Bannon', metadata: { 'Full name': 'Stephen Kevin Bannon', 'Date of birth': 'November 27, 1953', 'Nationality': 'American', 'Occupation': 'Former White House chief strategist', 'Address': 'Washington, D.C., USA', 'Latitude': '38.9072', 'Longitude': '-77.0369', 'Source': 'Press investigations (New York Times, 2019)', 'Notes': 'Former White House strategist; documented meetings with Epstein between 2017 and 2019.' }, x: 0.36, y: 0.54 },
+						{ id: 'e9', type: 'person', name: 'Alan Dershowitz', metadata: { 'Full name': 'Alan Morton Dershowitz', 'Date of birth': 'September 1, 1938', 'Nationality': 'American', 'Occupation': 'Harvard law professor; defense lawyer', 'Address': 'Cambridge, Massachusetts, USA', 'Latitude': '42.3736', 'Longitude': '-71.1097', 'Source': 'Court records (2008 defense team)', 'Notes': 'Harvard law professor on Epstein’s 2008 defense team; denied Virginia Giuffre’s allegations against him.' }, x: 0.26, y: 0.66 },
+						{ id: 'e10', type: 'person', name: 'Alexander Acosta', metadata: { 'Full name': 'R. Alexander Acosta', 'Date of birth': 'January 16, 1969', 'Nationality': 'American', 'Occupation': 'U.S. Attorney (S.D. Florida, 2005–2009)', 'Address': 'Miami, Florida, USA', 'Latitude': '25.7617', 'Longitude': '-80.1918', 'Source': 'U.S. Department of Justice records', 'Notes': 'Federal prosecutor who approved the 2008 non-prosecution agreement; resigned as Labor Secretary in 2019 after the deal’s fallout.' }, x: 0.56, y: 0.66 },
+						{ id: 'e11', type: 'person', name: 'Virginia Giuffre', metadata: { 'Full name': 'Virginia Louise Giuffre', 'Aliases': 'Virginia Roberts Giuffre', 'Date of birth': 'August 9, 1983', 'Nationality': 'American', 'Occupation': 'Key accuser in the Epstein case', 'Address': 'California, USA', 'Latitude': '34.0522', 'Longitude': '-118.2437', 'Source': 'Court filings (Giuffre v. Maxwell, 2015)', 'Notes': 'Central accuser of Epstein, Maxwell and Prince Andrew; her allegations drove the 2019–2021 prosecutions; died in 2025.' }, x: 0.42, y: 0.78 },
+						{ id: 'e12', type: 'company', name: 'Financial Management Trust', metadata: { 'Legal name': 'Financial Management Trust', 'Industry': 'Investment management', 'Address': 'New York City, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Source': 'Press investigations (2019)', 'Notes': 'One of Epstein’s main investment vehicles; managed his fortune and the Wexner family’s finances.' }, x: 0.7, y: 0.32 },
+						{ id: 'e13', type: 'vehicle', name: 'Lolita Express', metadata: { 'Make / model': 'Boeing 727-200 ’Lolita Express’', 'Owner': 'Jeffrey Epstein', 'Source': 'Flight logs reported by press', 'Notes': 'Epstein’s private jet, nicknamed the Lolita Express; flight logs recorded flights with political and business associates.' }, x: 0.8, y: 0.48 },
+						{ id: 'e14', type: 'location', name: 'Little St. James', metadata: { 'Location name': 'Little St. James', 'Address': 'Little St. James, U.S. Virgin Islands', 'Latitude': '18.3086', 'Longitude': '-64.9347', 'Type': 'Private island', 'Source': 'Press investigations (2019)', 'Notes': 'Epstein’s 70-acre private island in the U.S. Virgin Islands; site of abuse allegations in court filings.' }, x: 0.74, y: 0.74 },
+						{ id: 'e15', type: 'location', name: 'Manhattan, New York', metadata: { 'Location name': 'Manhattan', 'Address': '9 East 71st Street, New York City, USA', 'Latitude': '40.7769', 'Longitude': '-73.9654', 'Type': 'City', 'Source': 'Geographic reference', 'Notes': 'Site of Epstein’s Herbert N. Straus House townhouse, where he died in federal custody in 2019.' }, x: 0.5, y: 0.1 },
+						{ id: 'e16', type: 'location', name: 'Palm Beach, Florida', metadata: { 'Location name': 'Palm Beach', 'Address': 'Palm Beach, Florida, USA', 'Latitude': '26.6587', 'Longitude': '-80.0832', 'Type': 'City', 'Source': 'Geographic reference', 'Notes': 'Epstein’s Florida mansion, where the 2005 investigation that led to the 2008 plea deal began.' }, x: 0.34, y: 0.88 },
+						{ id: 'e17', type: 'location', name: 'United States Virgin Islands', metadata: { 'Location name': 'United States Virgin Islands', 'Address': 'U.S. Virgin Islands', 'Latitude': '18.3358', 'Longitude': '-64.8963', 'Type': 'Territory', 'Source': 'Geographic reference', 'Notes': 'U.S. territory where Epstein’s Little St. James island and other holdings are located.' }, x: 0.86, y: 0.9 },
+						{ id: 'e18', type: 'organization', name: '2008 plea deal (NPA)', metadata: { 'Official name': 'Non-prosecution agreement (2008)', 'Organization type': 'Legal agreement', 'Address': 'Miami, Florida, USA', 'Latitude': '25.7617', 'Longitude': '-80.1918', 'Source': 'U.S. court records (2019 ruling)', 'Notes': 'Deal brokered by the U.S. Attorney’s office that shielded Epstein and co-conspirators from federal charges; ruled a violation of the Crime Victims’ Rights Act in 2019.' }, x: 0.64, y: 0.84 }
+					], relationships: [{ id: 'r1', source: 'e1', target: 'e2', type: 'associated with' }, { id: 'r2', source: 'e1', target: 'e3', type: 'associated with' }, { id: 'r3', source: 'e1', target: 'e4', type: 'associated with' }, { id: 'r4', source: 'e1', target: 'e5', type: 'associated with' }, { id: 'r5', source: 'e1', target: 'e6', type: 'associated with' }, { id: 'r6', source: 'e1', target: 'e7', type: 'associated with' }, { id: 'r7', source: 'e1', target: 'e8', type: 'associated with' }, { id: 'r8', source: 'e1', target: 'e9', type: 'associated with' }, { id: 'r9', source: 'e1', target: 'e12', type: 'owns' }, { id: 'r10', source: 'e1', target: 'e13', type: 'owns' }, { id: 'r11', source: 'e1', target: 'e14', type: 'owns' }, { id: 'r12', source: 'e1', target: 'e15', type: 'lives at' }, { id: 'r13', source: 'e1', target: 'e16', type: 'lives at' }, { id: 'r14', source: 'e2', target: 'e14', type: 'lives at' }, { id: 'r15', source: 'e2', target: 'e11', type: 'associated with' }, { id: 'r16', source: 'e1', target: 'e11', type: 'associated with' }, { id: 'r17', source: 'e11', target: 'e7', type: 'associated with' }, { id: 'r18', source: 'e10', target: 'e18', type: 'created' }, { id: 'r19', source: 'e9', target: 'e18', type: 'associated with' }, { id: 'r20', source: 'e14', target: 'e17', type: 'located at' }, { id: 'r21', source: 'e3', target: 'e12', type: 'associated with' }, { id: 'r22', source: 'e7', target: 'e14', type: 'associated with' }, { id: 'r23', source: 'e4', target: 'e13', type: 'associated with' }, { id: 'r24', source: 'e5', target: 'e13', type: 'associated with' }]
+				}, usecase3: {
+					version: 1, entities: [
+						{ id: 'e1', type: 'person', name: 'Jürgen Mossack', metadata: { 'Full name': 'Jürgen Mossack', 'Occupation': 'Lawyer and co-founder of Mossack Fonseca', 'Nationality': 'German', 'Address': 'Panama City, Panama', 'Latitude': '8.9824', 'Longitude': '-79.5199', 'Source': 'Public legal records and media reporting', 'Notes': 'One of the founders of the law firm at the center of the leaked offshore finance network.' }, x: .28, y: .32 },
+						{ id: 'e2', type: 'person', name: 'Ramón Fonseca Mora', metadata: { 'Full name': 'Ramón Fonseca Mora', 'Occupation': 'Lawyer and co-founder of Mossack Fonseca', 'Nationality': 'Panamanian', 'Address': 'Panama City, Panama', 'Latitude': '8.9824', 'Longitude': '-79.5199', 'Source': 'Public legal records and media reporting', 'Notes': 'Co-founder of Mossack Fonseca, linked to offshore structures and legal controversy.' }, x: .58, y: .32 },
+						{ id: 'e3', type: 'organization', name: 'Mossack Fonseca', metadata: { 'Official name': 'Mossack Fonseca & Co.', 'Organization type': 'Law firm', 'Website': 'https://www.mossfonseca.com', 'Address': 'Panama City, Panama', 'Latitude': '8.9824', 'Longitude': '-79.5199', 'Source': 'Firm records and public reporting', 'Notes': 'The law firm central to the Panama Papers leak, creating shell companies and offshore structures.' }, x: .44, y: .58 },
+						{ id: 'e4', type: 'organization', name: 'ICIJ', metadata: { 'Official name': 'International Consortium of Investigative Journalists', 'Organization type': 'Investigative journalism network', 'Website': 'https://www.icij.org', 'Address': 'Washington, D.C., USA', 'Latitude': '38.9072', 'Longitude': '-77.0369', 'Source': 'Media and reporting records', 'Notes': 'The nonprofit journalism network that coordinated the Panama Papers investigation and published the findings.' }, x: .18, y: .67 },
+						{ id: 'e5', type: 'organization', name: 'Süddeutsche Zeitung', metadata: { 'Official name': 'Süddeutsche Zeitung', 'Organization type': 'Newspaper', 'Website': 'https://www.sueddeutsche.de', 'Address': 'Munich, Germany', 'Latitude': '48.1372', 'Longitude': '11.5755', 'Source': 'Media records', 'Notes': 'German newspaper that received the original leak of 11.5 million documents from an anonymous source.' }, x: .10, y: .20 },
+						{ id: 'e6', type: 'organization', name: 'Offshore shell company network', metadata: { 'Official name': 'Offshore shell company network', 'Organization type': 'Corporate secrecy network', 'Address': 'Global', 'Latitude': '20.0000', 'Longitude': '-20.0000', 'Source': 'Public investigative summaries', 'Notes': 'A broad network of entities used to obscure ownership, transfer funds, and conceal political or financial interests.' }, x: .69, y: .71 },
+						{ id: 'e7', type: 'organization', name: 'Panama Papers', metadata: { 'Official name': 'Panama Papers', 'Organization type': 'Leaked financial documents', 'Address': 'Global', 'Latitude': '10.0000', 'Longitude': '-80.0000', 'Source': 'Journalistic investigation', 'Notes': 'A historic leak of documents exposing offshore structures, hidden wealth, and cross-border financial secrecy.' }, x: .52, y: .12 },
+						{ id: 'e8', type: 'location', name: 'Panama City, Panama', metadata: { 'Location name': 'Panama City', 'Address': 'Panama City, Panama', 'Latitude': '8.9824', 'Longitude': '-79.5199', 'Type': 'Capital city', 'Source': 'Geographic reference', 'Notes': 'The center of the legal and financial operations behind the offshore structures exposed by the papers.' }, x: .80, y: .72 },
+						{ id: 'e9', type: 'person', name: 'David Cameron', metadata: { 'Full name': 'David Cameron', 'Occupation': 'Former Prime Minister of the United Kingdom', 'Nationality': 'British', 'Address': 'London, United Kingdom', 'Latitude': '51.5074', 'Longitude': '-0.1278', 'Source': 'Public office and media records', 'Notes': 'Former UK prime minister whose family’s Blairmore Holdings offshore trust was exposed by the leak.' }, x: .76, y: .10 },
+						{ id: 'e10', type: 'company', name: 'Blairmore Holdings', metadata: { 'Legal name': 'Blairmore Holdings Inc.', 'Industry': 'Investment fund', 'Address': 'Panama / British Virgin Islands', 'Source': 'Panama Papers disclosures', 'Notes': 'Offshore investment fund linked to David Cameron’s father, revealed in the leaked records.' }, x: .88, y: .22 },
+						{ id: 'e11', type: 'person', name: 'Sigmundur Davíð Gunnlaugsson', metadata: { 'Full name': 'Sigmundur Davíð Gunnlaugsson', 'Occupation': 'Former Prime Minister of Iceland', 'Nationality': 'Icelandic', 'Address': 'Reykjavík, Iceland', 'Latitude': '64.1466', 'Longitude': '-21.9426', 'Source': 'Public office and media records', 'Notes': 'Icelandic prime minister who resigned after the leak revealed his Wintris Inc offshore stake.' }, x: .08, y: .42 },
+						{ id: 'e12', type: 'company', name: 'Wintris Inc', metadata: { 'Legal name': 'Wintris Inc.', 'Industry': 'Offshore holding company', 'Address': 'British Virgin Islands', 'Source': 'Panama Papers disclosures', 'Notes': 'Shell company owned by Sigmundur Davíð Gunnlaugsson and his wife, with claims on Icelandic banks.' }, x: .16, y: .56 },
+						{ id: 'e13', type: 'person', name: 'Vladimir Putin', metadata: { 'Full name': 'Vladimir Putin', 'Occupation': 'President of Russia', 'Nationality': 'Russian', 'Address': 'Moscow, Russia', 'Latitude': '55.7558', 'Longitude': '37.6173', 'Source': 'Public records and investigative reporting', 'Notes': 'Russian president whose inner circle was linked to offshore trails in the leaked documents.' }, x: .60, y: .86 },
+						{ id: 'e14', type: 'person', name: 'Sergei Roldugin', metadata: { 'Full name': 'Sergei Roldugin', 'Occupation': 'Cellist and businessman', 'Nationality': 'Russian', 'Address': 'St. Petersburg, Russia', 'Latitude': '59.9343', 'Longitude': '30.3351', 'Source': 'Investigative reporting', 'Notes': 'Cellist and close associate of Putin named in offshore company networks exposed by the papers.' }, x: .48, y: .90 },
+						{ id: 'e15', type: 'person', name: 'Nawaz Sharif', metadata: { 'Full name': 'Nawaz Sharif', 'Occupation': 'Former Prime Minister of Pakistan', 'Nationality': 'Pakistani', 'Address': 'Lahore, Pakistan', 'Latitude': '31.5204', 'Longitude': '74.3587', 'Source': 'Public office and court records', 'Notes': 'Former Pakistani prime minister whose family’s offshore companies were exposed by the leak.' }, x: .30, y: .60 },
+						{ id: 'e16', type: 'person', name: 'Petro Poroshenko', metadata: { 'Full name': 'Petro Poroshenko', 'Occupation': 'Former President of Ukraine', 'Nationality': 'Ukrainian', 'Address': 'Kyiv, Ukraine', 'Latitude': '50.4501', 'Longitude': '30.5234', 'Source': 'Public office and media records', 'Notes': 'Former Ukrainian president linked to an offshore holding company in the leaked records.' }, x: .50, y: .30 },
+						{ id: 'e17', type: 'person', name: 'Mauricio Macri', metadata: { 'Full name': 'Mauricio Macri', 'Occupation': 'Former President of Argentina', 'Nationality': 'Argentine', 'Address': 'Buenos Aires, Argentina', 'Latitude': '-34.6037', 'Longitude': '-58.3816', 'Source': 'Public office and media records', 'Notes': 'Former Argentine president named in offshore company filings revealed by the papers.' }, x: .70, y: .44 },
+						{ id: 'e18', type: 'person', name: 'Daphne Caruana Galizia', metadata: { 'Full name': 'Daphne Caruana Galizia', 'Occupation': 'Investigative journalist', 'Nationality': 'Maltese', 'Address': 'Valletta, Malta', 'Latitude': '35.8989', 'Longitude': '14.5146', 'Source': 'Media and reporting records', 'Notes': 'Maltese journalist who investigated Panama Papers links in Malta and was assassinated in 2017.' }, x: .36, y: .76 }
+					], relationships: [{ id: 'r1', source: 'e1', target: 'e3', type: 'works at' }, { id: 'r2', source: 'e2', target: 'e3', type: 'works at' }, { id: 'r3', source: 'e3', target: 'e7', type: 'associated with' }, { id: 'r4', source: 'e4', target: 'e7', type: 'reported on' }, { id: 'r5', source: 'e5', target: 'e7', type: 'reported on' }, { id: 'r6', source: 'e3', target: 'e6', type: 'created' }, { id: 'r7', source: 'e3', target: 'e8', type: 'located at' }, { id: 'r8', source: 'e8', target: 'e7', type: 'related to' }, { id: 'r9', source: 'e9', target: 'e10', type: 'family of' }, { id: 'r10', source: 'e9', target: 'e3', type: 'associated with' }, { id: 'r11', source: 'e11', target: 'e12', type: 'owns' }, { id: 'r12', source: 'e11', target: 'e3', type: 'associated with' }, { id: 'r13', source: 'e12', target: 'e7', type: 'mentioned in' }, { id: 'r14', source: 'e13', target: 'e14', type: 'associated with' }, { id: 'r15', source: 'e14', target: 'e3', type: 'associated with' }, { id: 'r16', source: 'e13', target: 'e6', type: 'associated with' }, { id: 'r17', source: 'e15', target: 'e3', type: 'associated with' }, { id: 'r18', source: 'e16', target: 'e3', type: 'associated with' }, { id: 'r19', source: 'e17', target: 'e3', type: 'associated with' }, { id: 'r20', source: 'e18', target: 'e7', type: 'reported on' }, { id: 'r21', source: 'e7', target: 'e6', type: 'exposed' }, { id: 'r22', source: 'e9', target: 'e7', type: 'mentioned in' }, { id: 'r23', source: 'e11', target: 'e7', type: 'mentioned in' }, { id: 'r24', source: 'e13', target: 'e7', type: 'mentioned in' }, { id: 'r25', source: 'e15', target: 'e7', type: 'mentioned in' }, { id: 'r26', source: 'e16', target: 'e7', type: 'mentioned in' }, { id: 'r27', source: 'e17', target: 'e7', type: 'mentioned in' }]
+				}
+			};
+			const saved = loadSavedState(), seed = usecases.usecase1;
+			let currentUsecase = Object.hasOwn(usecases, saved.currentUsecase) ? saved.currentUsecase : 'usecase1';
+			let data = saved.data || structuredClone(seed), selectedId = data.entities.some(e => e.id === saved.selectedId) ? saved.selectedId : data.entities[0]?.id || null, activeType = 'all', activeView = 'network', layoutModes = ['free', 'random', 'circular', 'radial', 'tree', 'cluster'], layoutMode = layoutModes.includes(saved.layoutMode) ? saved.layoutMode : 'free', mapInstance = null, mapMarkers = null, dragId = null, hasDragged = false, layoutDirty = false;
+			const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)], escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+			function unsafeKey(key) { return key === '__proto__' || key === 'constructor' || key === 'prototype' }
+			function sanitize(raw) {
+				if (!raw || typeof raw !== 'object') return null;
+				const list = Array.isArray(raw.entities) ? raw.entities : Array.isArray(raw.nodes) ? raw.nodes : null;
+				const links = Array.isArray(raw.relationships) ? raw.relationships : Array.isArray(raw.edges) ? raw.edges : null;
+				if (!list || !links) return null;
+				const items = input => input.filter(item => item && typeof item === 'object');
+				const entities = items(list).map((e, i) => {
+					const metadata = {};
+					if (e.metadata && typeof e.metadata === 'object' && !Array.isArray(e.metadata)) for (const [key, value] of Object.entries(e.metadata)) if (!unsafeKey(key)) metadata[key] = String(value ?? '');
+					return { id: String(e.id ?? `entity-${i}-${crypto.randomUUID()}`), type: Object.hasOwn(typeInfo, String(e.type)) ? String(e.type) : 'organization', name: String(e.name ?? e.label ?? `Entity ${i + 1}`), metadata, x: Number.isFinite(e.x) ? e.x : .2 + Math.random() * .6, y: Number.isFinite(e.y) ? e.y : .2 + Math.random() * .6 };
+				});
+				const ids = new Set(entities.map(e => e.id));
+				const relationships = items(links).map(r => ({ id: String(r.id ?? crypto.randomUUID()), source: String(r.source ?? r.from ?? ''), target: String(r.target ?? r.to ?? ''), type: String(r.type ?? r.label ?? 'associated with') })).filter(r => r.source !== r.target && ids.has(r.source) && ids.has(r.target));
+				return { version: 1, entities, relationships };
+			}
+			function loadSavedState() {
+				try {
+					const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+					const data = sanitize(parsed?.data ?? parsed);
+					return data ? { data, currentUsecase: parsed.currentUsecase, selectedId: parsed.selectedId, layoutMode: parsed.layoutMode } : {};
+				} catch (e) { console.warn('Could not load saved workspace', e); return {} }
+			}
+			function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, data, currentUsecase, selectedId, layoutMode })) } catch (e) { console.warn('Could not save workspace', e) } }
+			function selfCheck() {
+				const payload = '<img src=x onerror=alert(1)>';
+				const clean = sanitize({ entities: [{ id: 1, type: 'constructor', name: payload, metadata: { constructor: payload, 'a"b': payload }, x: '9' }], relationships: [{ source: 1, target: 9 }] });
+				const e = clean.entities[0];
+				console.assert(e.type === 'organization' && e.name === payload && e.metadata['a"b'] === payload && !Object.hasOwn(e.metadata, 'constructor') && e.x > 0 && e.x < 1 && !clean.relationships.length, 'sanitize() rejects malformed/unsafe input');
+			}
+			selfCheck();
+			function confirmLoadUsecase(usecaseId) {
+				if (!Object.hasOwn(usecases, usecaseId)) return;
+				const label = [...$('#usecaseSelect').options].find(o => o.value === usecaseId)?.textContent || usecaseId;
+				openModal(`<div class="modal-header"><h2>Load case</h2><button class="icon-btn" data-close>×</button></div><div class="modal-body"><p style="margin:0;color:#dfe7f6;line-height:1.6">Load <strong>${label}</strong>? You will lose your current information.</p></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button type="button" class="primary" id="confirmLoadUsecaseBtn">Load</button></div>`);
+				$('#confirmLoadUsecaseBtn').onclick = () => {
+					loadUsecase(usecaseId);
+					closeModal();
+				};
+				bindClose();
+			}
+			function loadUsecase(usecaseId) {
+				if (!Object.hasOwn(usecases, usecaseId)) return;
+				currentUsecase = usecaseId;
+				data = structuredClone(usecases[usecaseId]);
+				selectedId = data.entities[0]?.id || null;
+				layoutDirty = true;
+				activeType = 'all';
+				$('#sideSearch').value = '';
+				$('#globalSearch').value = '';
+				const usecaseSelect = $('#usecaseSelect'); if (usecaseSelect) usecaseSelect.value = currentUsecase;
+				save();
+				render();
+			}
+			function entity(id) { return data.entities.find(e => e.id === id) }
+			function related(id) { return data.relationships.filter(r => r.source === id || r.target === id) }
+			function highlightConnections(id) { const neighbors = new Set([id]); data.relationships.forEach(r => { if (r.source === id) neighbors.add(r.target); else if (r.target === id) neighbors.add(r.source) }); $$('#graph .node').forEach(n => n.classList.toggle('dimmed', !neighbors.has(n.dataset.id))); $$('#graph .edge-g').forEach(g => { const on = g.dataset.source === id || g.dataset.target === id; g.classList.toggle('highlighted', on); g.classList.toggle('dimmed', !on) }) }
+			function clearHighlight() { $$('#graph .node.dimmed').forEach(n => n.classList.remove('dimmed')); $$('#graph .edge-g.highlighted, #graph .edge-g.dimmed').forEach(g => g.classList.remove('highlighted', 'dimmed')) }
+			function shortName(e) { return e.name.length > 20 ? e.name.slice(0, 18) + '…' : e.name }
+			function render() { renderList(); renderInspector(); renderGraph(); renderMap(); $('#entityCount').textContent = data.entities.length; $('#edgeCount').textContent = `${data.relationships.length} connection${data.relationships.length === 1 ? '' : 's'}`; $('#emptyState').classList.toggle('show', !data.entities.length && activeView === 'network') }
+			function renderFilters() { const types = ['all', ...Object.keys(typeInfo)]; $('#typeFilters').innerHTML = types.map(t => `<button class="type-chip ${activeType === t ? 'active' : ''}" data-type="${t}">${t === 'all' ? 'All' : typeInfo[t].label}</button>`).join(''); $$('.type-chip').forEach(b => b.onclick = () => { activeType = b.dataset.type; renderFilters(); renderList() }) }
+			function renderList() { renderFilters(); const query = $('#sideSearch').value.trim().toLowerCase(); const list = data.entities.filter(e => (activeType === 'all' || e.type === activeType) && (`${e.name} ${typeInfo[e.type]?.label || ''}`).toLowerCase().includes(query)); $('#entityList').innerHTML = list.map(e => { const t = typeInfo[e.type] || typeInfo.organization; return `<div class="entity-row ${e.id === selectedId ? 'selected' : ''}" data-id="${escapeHtml(e.id)}"><div class="entity-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div class="entity-copy"><div class="entity-name">${escapeHtml(e.name)}</div><div class="entity-type">${t.label}</div></div><span class="entity-count">${related(e.id).length}</span></div>` }).join('') || `<div style="padding:18px 10px;color:var(--faint);font-size:11px">No matching entities</div>`; $$('.entity-row').forEach(row => row.onclick = () => select(row.dataset.id)) }
+			function select(id) { selectedId = id; save(); render() }
+			function renderInspector() {
+				const e = entity(selectedId), ins = $('#inspector'); if (!e) { ins.innerHTML = '<div class="no-selection"><div><div class="target">⌖</div>Select an entity on the graph or add one to view its details.</div></div>'; return } const t = typeInfo[e.type] || typeInfo.organization; const fields = Object.keys(e.metadata || {}); const links = related(e.id); ins.innerHTML = `<div class="inspector-head"><span class="eyebrow">Entity details</span><button class="icon-btn" id="closeInspector" title="Clear selection">×</button></div><div class="detail-hero"><div class="hero-top"><div class="hero-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div><div class="hero-title">${escapeHtml(e.name)}</div><div class="hero-type">${t.label}</div></div></div><div class="hero-actions"><button class="small-button" id="connectSelected">＋ Connect</button><button class="small-button danger" id="deleteSelected">Delete</button></div></div><section class="section"><div class="section-title">Metadata <button class="metadata-add" id="addMetadata">＋ Add field</button></div><div id="metadataFields">${fields.map((key, i) => `<div class="field"><label>${escapeHtml(key)}</label>${key === 'Notes' ? `<textarea data-key="${escapeHtml(key)}" placeholder="Add context…">${escapeHtml(e.metadata[key])}</textarea>` : `<input data-key="${escapeHtml(key)}" value="${escapeHtml(e.metadata[key])}" placeholder="Not recorded" />`}</div>`).join('')}</div><div class="map-fields-note">To map an entity, enter Latitude and Longitude (decimal degrees) in its metadata.</div></section><section class="section"><div class="section-title">Connections <span class="count">${links.length}</span></div><div class="relation-list">${links.map(r => { const other = entity(r.source === e.id ? r.target : r.source); return other ? `<div class="relation" data-id="${escapeHtml(other.id)}"><span class="rel-line"></span><span>${escapeHtml(other.name)}</span><span class="rel-kind">${escapeHtml(r.type)}</span></div>` : '' }).join('') || '<div style="color:var(--faint);font-size:11px">No connections yet</div>'}</div></section>`;
+				$('#closeInspector').onclick = () => { selectedId = null; render() }; $('#connectSelected').onclick = () => openConnect(e.id); $('#deleteSelected').onclick = () => deleteEntity(e.id); $('#addMetadata').onclick = () => addMetadataField(e.id); $$('#metadataFields input, #metadataFields textarea').forEach(input => input.onchange = () => { e.metadata[input.dataset.key] = input.value; if (input.dataset.key === 'Full name' || input.dataset.key === 'Legal name' || input.dataset.key === 'Official name' || input.dataset.key === 'Location name' || input.dataset.key === 'Username') e.name = input.value.trim() || e.name; save(); renderList(); renderGraph(); renderMap() }); $$('.relation').forEach(row => row.onclick = () => select(row.dataset.id))
+			}
+			function getLayoutRoot() { if (selectedId && entity(selectedId)) return entity(selectedId); return data.entities.reduce((best, current) => { const currentDegree = (data.relationships.filter(r => r.source === current.id || r.target === current.id)).length; const bestDegree = best ? (data.relationships.filter(r => r.source === best.id || r.target === best.id)).length : -1; return !best || currentDegree > bestDegree ? current : best; }, data.entities[0] || null) }
+			function applyForcedLayout() { if (layoutMode === 'free') return; const nodes = data.entities; const count = nodes.length || 1; const root = getLayoutRoot(); if (!root) return; const centerX = .5, centerY = .5; if (layoutMode === 'random') { nodes.forEach((node, index) => { const seedA = (index * 37) % 97; const seedB = (index * 53) % 89; node.x = .1 + (seedA / 97) * .8; node.y = .12 + (seedB / 89) * .7; }); return } if (layoutMode === 'circular') { nodes.forEach((node, index) => { const angle = (index / count) * Math.PI * 2 - Math.PI / 2; node.x = .5 + Math.cos(angle) * .34; node.y = .5 + Math.sin(angle) * .32; }); return } if (layoutMode === 'radial') { const others = nodes.filter(n => n.id !== root.id); const max = Math.max(1, others.length); root.x = centerX; root.y = centerY; others.forEach((node, index) => { const angle = (index / max) * Math.PI * 2; const r = .18 + ((index % 4) * .08); node.x = centerX + Math.cos(angle) * r; node.y = centerY + Math.sin(angle) * r; }); return } if (layoutMode === 'cluster') { const groups = new Map(); nodes.forEach(node => { const key = node.type || 'organization'; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(node) }); const keys = [...groups.keys()].sort((a, b) => groups.get(b).length - groups.get(a).length); const total = Math.max(1, keys.length); keys.forEach((key, gi) => { const members = groups.get(key); const angle = (gi / total) * Math.PI * 2 - Math.PI / 2; const cx = .5 + Math.cos(angle) * .30; const cy = .5 + Math.sin(angle) * .28; const n = members.length; if (n === 1) { members[0].x = cx; members[0].y = cy; return } const r = .04 + Math.min(n, 12) * .008; members.forEach((node, mi) => { const a = (mi / n) * Math.PI * 2 - Math.PI / 2; node.x = cx + Math.cos(a) * r; node.y = cy + Math.sin(a) * r; }) }); return } if (layoutMode === 'tree') { const children = new Map(nodes.map(node => [node.id, []])); data.relationships.forEach(r => { if (r.source && r.target) children.get(r.source)?.push(r.target); }); const levels = new Map(); const queue = [root]; levels.set(root.id, 0); const seen = new Set([root.id]); while (queue.length) { const current = queue.shift(); const currentLevel = levels.get(current.id) || 0; for (const childId of children.get(current.id) || []) { if (seen.has(childId)) continue; seen.add(childId); const child = entity(childId); if (child) { levels.set(childId, currentLevel + 1); queue.push(child) } } } const maxLevel = Math.max(...Array.from(levels.values()), 0); const levelBuckets = new Map(); for (const node of nodes) { const level = levels.get(node.id) || 0; if (!levelBuckets.has(level)) levelBuckets.set(level, []); levelBuckets.get(level).push(node) } root.x = .5; root.y = .12; for (let level = 0; level <= maxLevel; level++) { const bucket = levelBuckets.get(level) || []; const total = bucket.length || 1; bucket.forEach((node, index) => { const slot = (index + 1) / (total + 1); node.x = .12 + slot * .76; node.y = .12 + level * .18; }) } } }
+			let graphZoom = 1;
+			function setZoom(z) { graphZoom = Math.max(.5, Math.min(3, z)); const zl = $('#zoomLevel'); if (zl) zl.textContent = Math.round(graphZoom * 100) + '%'; renderGraph() }
+			function renderGraph() {
+				const svg = $('#graph'), wrap = $('#canvasWrap'), w = wrap.clientWidth, h = wrap.clientHeight;
+				const vbW = w / graphZoom, vbH = h / graphZoom;
+				svg.setAttribute('viewBox', `${((w - vbW) / 2).toFixed(1)} ${((h - vbH) / 2).toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}`);
+				svg.style.display = activeView === 'network' ? 'block' : 'none';
+				if (activeView !== 'network') return;
+				if (layoutDirty) { applyForcedLayout(); layoutDirty = false; save() }
+				const pos = new Map(data.entities.map(e => [e.id, graphPoint(e)]));
+				const edgeMarkup = data.relationships.map(r => { const a = pos.get(r.source), b = pos.get(r.target); if (!a || !b) return ''; const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2; return `<g class="edge-g" data-source="${escapeHtml(r.source)}" data-target="${escapeHtml(r.target)}"><line class="edge" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/><text class="edge-label" x="${mx}" y="${my - 5}" text-anchor="middle">${escapeHtml(r.type)}</text></g>` }).join('');
+				const nodeRadius = e => 16 + Math.min(related(e.id).length, 12) * 1.6;
+				const nodes = data.entities.map(e => { const p = pos.get(e.id), t = typeInfo[e.type] || typeInfo.organization, selected = e.id === selectedId, r = nodeRadius(e); return `<g class="node ${selected ? 'selected' : ''}" data-id="${escapeHtml(e.id)}" transform="translate(${p.x} ${p.y})"><circle class="node-halo" r="${(r + 11).toFixed(1)}"/><circle class="node-circle" r="${r.toFixed(1)}" fill="${t.bg}"/><text x="0" y="${(r * 0.35).toFixed(1)}" text-anchor="middle" fill="${t.color}" font-size="${(r * 0.75).toFixed(1)}">${t.icon}</text><text class="node-label" x="0" y="${(r + 16).toFixed(1)}">${escapeHtml(shortName(e))}</text><text class="node-sub" x="0" y="${(r + 29).toFixed(1)}">${escapeHtml(t.label)}</text></g>` }).join('');
+				svg.innerHTML = edgeMarkup + nodes;
+				svg.onpointerdown = ev => { const node = ev.target.closest('.node'); if (!node) return; clearHighlight(); dragId = node.dataset.id; hasDragged = false; svg.setPointerCapture(ev.pointerId) };
+				svg.onpointermove = ev => { if (!dragId) return; const rect = wrap.getBoundingClientRect(), e = entity(dragId); if (!e) return; const zc = (1 - 1 / graphZoom) / 2; e.x = Math.max(.04, Math.min(.96, zc + (ev.clientX - rect.left) / (w * graphZoom))); e.y = Math.max(.07, Math.min(.93, zc + (ev.clientY - rect.top) / (h * graphZoom))); hasDragged = true; renderGraph() };
+				svg.onpointerup = () => { if (!dragId) return; const id = dragId; dragId = null; if (hasDragged) save(); else select(id) };
+				svg.onpointercancel = () => { dragId = null };
+				svg.onpointerover = ev => { const node = ev.target.closest('.node'); if (!node || dragId) return; highlightConnections(node.dataset.id) };
+				svg.onpointerout = ev => { const node = ev.target.closest('.node'); if (!node) return; if (ev.relatedTarget && node.contains(ev.relatedTarget)) return; clearHighlight() }; svg.onwheel = ev => { ev.preventDefault(); setZoom(graphZoom * (ev.deltaY < 0 ? 1.12 : 1 / 1.12)) };
+			}
+			function graphPoint(e) { const w = $('#canvasWrap').clientWidth, h = $('#canvasWrap').clientHeight; return { x: (e.x ?? .5) * w, y: (e.y ?? .5) * h } }
+			function coordinates(e) { const m = e.metadata || {}; const lat = Number(m.Latitude), lon = Number(m.Longitude); return Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180 && (m.Latitude !== '' && m.Longitude !== '') ? [lat, lon] : null }
+			function renderMap() { if (activeView !== 'map' || !mapInstance) return; if (mapMarkers) { mapMarkers.clearLayers() } else mapMarkers = L.layerGroup().addTo(mapInstance); const points = []; for (const e of data.entities) { const coords = coordinates(e); if (!coords) continue; points.push(coords); const t = typeInfo[e.type] || typeInfo.organization; const marker = L.circleMarker(coords, { radius: 6 + Math.min(related(e.id).length, 12) * 0.7, color: t.color, fillColor: t.color, fillOpacity: .9, weight: 2 }).bindPopup(`<strong>${escapeHtml(e.name)}</strong><br><small>${escapeHtml(t.label)} · ${coords[0]}, ${coords[1]}</small>`); marker.on('click', () => select(e.id)); mapMarkers.addLayer(marker) } $('#mapEmpty').classList.toggle('show', points.length === 0); if (points.length === 1) mapInstance.setView(points[0], 12); else if (points.length > 1) mapInstance.fitBounds(points, { padding: [45, 45], maxZoom: 12 }) }
+			function setView(view) { activeView = view; $$('.view-tab').forEach(b => b.classList.toggle('active', b.dataset.view === view)); $('#mapPanel').classList.toggle('active', view === 'map'); $('#canvasHint').style.display = view === 'network' ? '' : 'none'; if (view === 'map') { if (location.protocol === 'file:') { $('#mapEmpty').innerHTML = '<div><strong>Map tiles disabled for local-file use</strong>Run this app from an HTTP(S) address so tile requests include a valid referrer.</div>'; $('#mapEmpty').classList.add('show'); return } if (!window.L) { $('#mapEmpty').classList.add('show'); $('#mapEmpty').innerHTML = '<div><strong>Map library unavailable</strong>Reconnect to load the map view.</div>'; return } if (!mapInstance) { mapInstance = L.map('map').setView([20, 0], 2); L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors' }).addTo(mapInstance); mapMarkers = L.layerGroup().addTo(mapInstance) } setTimeout(() => { mapInstance.invalidateSize(); renderMap() }, 80) } else renderGraph() }
+			function openModal(content) { $('#modal').innerHTML = content; $('#modalBackdrop').classList.add('open') }
+			function closeModal() { $('#modalBackdrop').classList.remove('open') }
+			function addEntity() { openModal(`<div class="modal-header"><h2>Add entities</h2><button class="icon-btn" data-close>×</button></div><form id="entityForm"><div class="modal-body"><div class="form-field"><label for="entityType">Entity type</label><select id="entityType">${Object.entries(typeInfo).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('')}</select><small>Each type starts with a useful set of metadata fields.</small></div><div class="form-field"><label for="entityNames">Names / identifiers</label><textarea id="entityNames" required rows="4" placeholder="e.g. Jordan Rivera, Casey Morgan, Acme Research" autofocus></textarea><small>Enter one or more names separated by commas.</small></div><div class="connection-preview" id="fieldPreview"></div></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button class="primary" id="createEntitiesBtn" type="submit">Create entities</button></div></form>`); const type = $('#entityType'), names = $('#entityNames'), submit = $('#createEntitiesBtn'); const preview = () => $('#fieldPreview').innerHTML = `Default metadata: ${(typeInfo[type.value].fields || []).slice(0, 6).join(' · ')}${typeInfo[type.value].fields.length > 6 ? '…' : ''}`; const updateCount = () => { const count = [...new Set(names.value.split(',').map(name => name.trim()).filter(Boolean).map(name => name.toLocaleLowerCase()))].length; submit.textContent = count === 1 ? 'Create 1 entity' : `Create ${count || '…'} entities` }; type.onchange = preview; names.oninput = updateCount; preview(); updateCount(); names.focus(); $('#entityForm').onsubmit = ev => { ev.preventDefault(); const t = type.value, uniqueNames = [...new Map(names.value.split(',').map(name => name.trim()).filter(Boolean).map(name => [name.toLocaleLowerCase(), name])).values()]; if (!uniqueNames.length) { names.setCustomValidity('Enter at least one name.'); names.reportValidity(); return } names.setCustomValidity(''); const metadataFields = typeInfo[t].fields; const created = uniqueNames.map(name => ({ id: crypto.randomUUID(), type: t, name, metadata: Object.fromEntries(metadataFields.map(field => [field, ''])), x: .18 + Math.random() * .64, y: .17 + Math.random() * .65 })); data.entities.push(...created); selectedId = created[0].id; layoutDirty = true; save(); closeModal(); render() }; bindClose() }
+			function openConnect(sourceId) {
+				if (data.entities.length < 2) { alert('Add another entity before creating a connection.'); return } const sources = data.entities.map(e => `<option value="${escapeHtml(e.id)}" ${e.id === sourceId ? 'selected' : ''}>${escapeHtml(e.name)}</option>`).join(''); const targets = data.entities.filter(e => e.id !== sourceId).map(e => `<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)}</option>`).join(''); openModal(`<div class="modal-header"><h2>Create a connection</h2><button class="icon-btn" data-close>×</button></div><form id="connectForm"><div class="modal-body"><div class="form-row"><div class="form-field"><label for="relSource">From</label><select id="relSource">${sources}</select></div><div class="form-field"><label for="relType">Relationship</label><select id="relType">${relationships.map(r => `<option>${r}</option>`).join('')}</select></div></div><div class="form-field"><label for="relTarget">To</label><select id="relTarget">${targets}</select></div></div><div class="modal-footer"><button type="button" class="secondary" data-close>Cancel</button><button class="primary" type="submit">Add connection</button></div></form>`); $('#connectForm').onsubmit = ev => {
+					ev.preventDefault(); const source = $('#relSource').value, target = $('#relTarget').value, type = $('#relType').value; if (source === target) return; if (data.relationships.some(r => r.source === source && r.target === target && r.type === type)) { alert('That connection already exists.'); return } data.relationships.push({ id: crypto.randomUUID(), source, target, type }); layoutDirty = true; save();
+					closeModal(); render()
+				}; bindClose()
+			}
+			function addMetadataField(id) { const key = prompt('Field name')?.trim(); if (!key || unsafeKey(key)) return; const e = entity(id); if (Object.hasOwn(e.metadata, key)) { alert('This field already exists.'); return } e.metadata[key] = ''; save(); renderInspector() }
+			function deleteEntity(id) { const e = entity(id); if (!e) return; if (!confirm(`Delete “${e.name}” and its connections?`)) return; data.entities = data.entities.filter(x => x.id !== id); data.relationships = data.relationships.filter(r => r.source !== id && r.target !== id); selectedId = data.entities[0]?.id || null; layoutDirty = true; save(); render() }
+			function bindClose() { $$('[data-close]').forEach(b => b.onclick = closeModal) }
+			function exportJson() { const blob = new Blob([JSON.stringify({ schema: 'threadline-network', version: 1, exportedAt: new Date().toISOString(), entities: data.entities, relationships: data.relationships }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'threadline-network.json'; a.click(); URL.revokeObjectURL(a.href) }
+			function importJson(file) { const reader = new FileReader(); reader.onload = () => { let next; try { const parsed = JSON.parse(reader.result); next = sanitize({ entities: parsed.entities || parsed.nodes, relationships: parsed.relationships || parsed.edges }) } catch (err) { return alert(`Could not import JSON: ${err.message}`) } if (!next) return alert('Could not import JSON: entities and relationships arrays are required.'); data = next; selectedId = data.entities[0]?.id || null; layoutDirty = true; save(); render(); alert(`Imported ${data.entities.length} entities and ${data.relationships.length} connections.`) }; reader.readAsText(file) }
+			$('#addEntityBtn').onclick = addEntity; $('#zoomIn').onclick = () => setZoom(graphZoom * 1.25); $('#zoomOut').onclick = () => setZoom(graphZoom / 1.25); $('#exportBtn').onclick = exportJson; $('#importBtn').onclick = () => $('#fileInput').click(); $('#fileInput').onchange = ev => { if (ev.target.files[0]) importJson(ev.target.files[0]); ev.target.value = '' }; $('#usecaseSelect').onchange = ev => { const value = ev.target.value; if (!value) return; confirmLoadUsecase(value); ev.target.value = currentUsecase; }; $('#layoutSelect').onchange = ev => { layoutMode = ev.target.value; layoutDirty = true; render(); save(); }; $$('.view-tab').forEach(b => b.onclick = () => setView(b.dataset.view)); $('#sideSearch').oninput = renderList; $('#globalSearch').oninput = () => { $('#sideSearch').value = $('#globalSearch').value; renderList(); const match = data.entities.find(e => e.name.toLowerCase().includes($('#globalSearch').value.toLowerCase())); if (match && $('#globalSearch').value) select(match.id) }; document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeModal(); if (ev.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { ev.preventDefault(); $('#globalSearch').focus() } }); $('#modalBackdrop').onclick = ev => { if (ev.target.id === 'modalBackdrop') closeModal() }; window.addEventListener('resize', () => { renderGraph(); if (mapInstance) mapInstance.invalidateSize() }); $('#usecaseSelect').value = currentUsecase; $('#layoutSelect').value = layoutMode; render();
+		})();
 	</script>
 </body>
+
 </html>
