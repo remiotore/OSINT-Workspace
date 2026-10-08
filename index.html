@@ -27,7 +27,8 @@
 			--teal: #65d6c1;
 			--orange: #ffb86b;
 			--red: #ff7d8b;
-			--shadow: 0 18px 60px #0008
+			--shadow: 0 18px 60px #0008;
+			--topbar-h: 66px
 		}
 
 		* {
@@ -39,7 +40,7 @@
 			background: var(--bg);
 			color: var(--text);
 			font: 14px 'DM Sans', sans-serif;
-			height: 100vh;
+			height: 100dvh;
 			overflow: hidden
 		}
 
@@ -56,9 +57,9 @@
 		}
 
 		.app {
-			height: 100vh;
+			height: 100dvh;
 			display: grid;
-			grid-template-rows: 66px 1fr;
+			grid-template-rows: var(--topbar-h) 1fr;
 			max-width: 1800px;
 			margin: auto
 		}
@@ -603,6 +604,7 @@
 			position: absolute;
 			left: 17px;
 			bottom: 15px;
+			max-width: calc(100% - 34px);
 			padding: 7px 10px;
 			background: #161a24dd;
 			border: 1px solid var(--line);
@@ -897,7 +899,7 @@
 
 		.modal {
 			width: min(500px, 100%);
-			max-height: min(720px, 90vh);
+			max-height: min(720px, 90dvh);
 			overflow: auto;
 			background: #191d28;
 			border: 1px solid #353b4c;
@@ -1024,6 +1026,32 @@
 			color: #9ba4b7
 		}
 
+		.side-toggle {
+			display: none
+		}
+
+		@media(max-width:1200px) {
+			.search,
+			.workspace-name,
+			.hire-link {
+				display: none
+			}
+
+			.brand {
+				min-width: 0
+			}
+
+			.case-select-wrap {
+				flex: 0 1 240px;
+				min-width: 0
+			}
+
+			.case-select {
+				min-width: 0;
+				width: 100%
+			}
+		}
+
 		@media(max-width:1000px) {
 			.content {
 				grid-template-columns: 220px minmax(300px, 1fr)
@@ -1032,26 +1060,26 @@
 			.inspector {
 				position: absolute;
 				right: 0;
-				top: 66px;
+				top: var(--topbar-h);
 				bottom: 0;
 				width: 300px;
 				z-index: 2;
 				box-shadow: -12px 0 35px #0005
 			}
-
-			.workspace-name {
-				display: none
-			}
 		}
 
 		@media(max-width:650px) {
-			.app {
-				grid-template-rows: 58px 1fr
+			:root {
+				--topbar-h: 58px
 			}
 
 			.topbar {
 				padding: 0 12px;
 				gap: 10px
+			}
+
+			.side-toggle {
+				display: grid
 			}
 
 			.brand {
@@ -1060,7 +1088,9 @@
 
 			.brand-sub,
 			.search,
-			.top-action span,
+			.hire-link,
+			.top-spacer,
+			.top-action span+span,
 			.avatar {
 				display: none
 			}
@@ -1069,12 +1099,41 @@
 				margin-left: auto
 			}
 
+			.case-select-wrap {
+				flex: 1;
+				min-width: 0
+			}
+
+			.case-select {
+				min-width: 0;
+				width: 100%
+			}
+
+			.node-sub,
+			.edge-label {
+				display: none
+			}
+
 			.content {
 				grid-template-columns: 1fr
 			}
 
 			.sidebar {
-				display: none
+				position: fixed;
+				top: var(--topbar-h);
+				bottom: 0;
+				left: 0;
+				width: min(280px, 86vw);
+				z-index: 4;
+				transform: translateX(-100%);
+				visibility: hidden;
+				transition: transform .18s;
+				box-shadow: 12px 0 35px #0005
+			}
+
+			.app.side-open .sidebar {
+				transform: none;
+				visibility: visible
 			}
 
 			.viewbar {
@@ -1092,17 +1151,46 @@
 			}
 
 			.inspector {
-				top: 58px;
-				width: min(300px, 88vw)
+				left: 0;
+				right: 0;
+				top: auto;
+				bottom: 0;
+				width: auto;
+				max-height: 55dvh;
+				z-index: 3;
+				border-left: 0;
+				border-top: 1px solid var(--line);
+				border-radius: 12px 12px 0 0;
+				padding-bottom: env(safe-area-inset-bottom)
+			}
+
+			.inspector:not(:has(#closeInspector)) {
+				display: none
 			}
 
 			.canvas-hint {
 				bottom: 10px;
 				left: 9px
 			}
+		}
 
-			.app {
-				height: 100dvh
+		@media(max-width:420px) {
+			.brand-name {
+				display: none
+			}
+
+			.form-row {
+				grid-template-columns: 1fr
+			}
+		}
+
+		@media(max-height:480px) and (orientation:landscape) {
+			:root {
+				--topbar-h: 52px
+			}
+
+			.viewbar {
+				height: 44px
 			}
 		}
 	</style>
@@ -1111,6 +1199,8 @@
 <body>
 	<div class="app">
 		<header class="topbar">
+			<button class="icon-btn side-toggle" id="sideToggle" aria-label="Show entity list"
+				aria-controls="entityPanel" aria-expanded="false">☰</button>
 			<div class="brand">
 				<div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
 						<circle cx="12" cy="12" r="2.4" />
@@ -1125,7 +1215,7 @@
 				</div>
 			</div>
 			<div class="workspace-name"><span class="live-dot"></span><span>Investigation workspace</span></div>
-			<a href="https://remiotore.github.io/remiotore/" target="_blank" rel="noopener noreferrer"
+			<a href="https://remiotore.github.io/remiotore/" target="_blank" rel="noopener noreferrer" class="hire-link"
 				style="color:#dfe7ff;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;">Hire my
 				services!</a>
 			<div class="top-spacer"></div>
@@ -1144,7 +1234,7 @@
 			<input id="fileInput" type="file" accept="application/json,.json" hidden />
 		</header>
 		<div class="content">
-			<aside class="sidebar">
+			<aside class="sidebar" id="entityPanel">
 				<div class="side-head"><span class="eyebrow">Entities</span><span class="count"
 						id="entityCount">0</span></div>
 				<button class="add-button" id="addEntityBtn"><b style="font-size:16px">＋</b> Add entity</button>
@@ -1348,7 +1438,7 @@
 			function render() { renderList(); renderInspector(); renderGraph(); renderMap(); $('#entityCount').textContent = data.entities.length; $('#edgeCount').textContent = `${data.relationships.length} connection${data.relationships.length === 1 ? '' : 's'}`; $('#emptyState').classList.toggle('show', !data.entities.length && activeView === 'network') }
 			function renderFilters() { const types = ['all', ...Object.keys(typeInfo)]; $('#typeFilters').innerHTML = types.map(t => `<button class="type-chip ${activeType === t ? 'active' : ''}" data-type="${t}">${t === 'all' ? 'All' : typeInfo[t].label}</button>`).join(''); $$('.type-chip').forEach(b => b.onclick = () => { activeType = b.dataset.type; renderFilters(); renderList() }) }
 			function renderList() { renderFilters(); const query = $('#sideSearch').value.trim().toLowerCase(); const list = data.entities.filter(e => (activeType === 'all' || e.type === activeType) && (`${e.name} ${typeInfo[e.type]?.label || ''}`).toLowerCase().includes(query)); $('#entityList').innerHTML = list.map(e => { const t = typeInfo[e.type] || typeInfo.organization; return `<div class="entity-row ${e.id === selectedId ? 'selected' : ''}" data-id="${escapeHtml(e.id)}"><div class="entity-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div class="entity-copy"><div class="entity-name">${escapeHtml(e.name)}</div><div class="entity-type">${t.label}</div></div><span class="entity-count">${related(e.id).length}</span></div>` }).join('') || `<div style="padding:18px 10px;color:var(--faint);font-size:11px">No matching entities</div>`; $$('.entity-row').forEach(row => row.onclick = () => select(row.dataset.id)) }
-			function select(id) { selectedId = id; save(); render() }
+			function select(id) { selectedId = id; save(); closeSidebar(); render() }
 			function renderInspector() {
 				const e = entity(selectedId), ins = $('#inspector'); if (!e) { ins.innerHTML = '<div class="no-selection"><div><div class="target">⌖</div>Select an entity on the graph or add one to view its details.</div></div>'; return } const t = typeInfo[e.type] || typeInfo.organization; const fields = Object.keys(e.metadata || {}); const links = related(e.id); ins.innerHTML = `<div class="inspector-head"><span class="eyebrow">Entity details</span><button class="icon-btn" id="closeInspector" title="Clear selection">×</button></div><div class="detail-hero"><div class="hero-top"><div class="hero-icon" style="background:${t.bg};color:${t.color}">${t.icon}</div><div><div class="hero-title">${escapeHtml(e.name)}</div><div class="hero-type">${t.label}</div></div></div><div class="hero-actions"><button class="small-button" id="connectSelected">＋ Connect</button><button class="small-button danger" id="deleteSelected">Delete</button></div></div><section class="section"><div class="section-title">Metadata <button class="metadata-add" id="addMetadata">＋ Add field</button></div><div id="metadataFields">${fields.map((key, i) => `<div class="field"><label>${escapeHtml(key)}</label>${key === 'Notes' ? `<textarea data-key="${escapeHtml(key)}" placeholder="Add context…">${escapeHtml(e.metadata[key])}</textarea>` : `<input data-key="${escapeHtml(key)}" value="${escapeHtml(e.metadata[key])}" placeholder="Not recorded" />`}</div>`).join('')}</div><div class="map-fields-note">To map an entity, enter Latitude and Longitude (decimal degrees) in its metadata.</div></section><section class="section"><div class="section-title">Connections <span class="count">${links.length}</span></div><div class="relation-list">${links.map(r => { const other = entity(r.source === e.id ? r.target : r.source); return other ? `<div class="relation" data-id="${escapeHtml(other.id)}"><span class="rel-line"></span><span>${escapeHtml(other.name)}</span><span class="rel-kind">${escapeHtml(r.type)}</span></div>` : '' }).join('') || '<div style="color:var(--faint);font-size:11px">No connections yet</div>'}</div></section>`;
 				$('#closeInspector').onclick = () => { selectedId = null; render() }; $('#connectSelected').onclick = () => openConnect(e.id); $('#deleteSelected').onclick = () => deleteEntity(e.id); $('#addMetadata').onclick = () => addMetadataField(e.id); $$('#metadataFields input, #metadataFields textarea').forEach(input => input.onchange = () => { e.metadata[input.dataset.key] = input.value; if (input.dataset.key === 'Full name' || input.dataset.key === 'Legal name' || input.dataset.key === 'Official name' || input.dataset.key === 'Location name' || input.dataset.key === 'Username') e.name = input.value.trim() || e.name; save(); renderList(); renderGraph(); renderMap() }); $$('.relation').forEach(row => row.onclick = () => select(row.dataset.id))
@@ -1391,10 +1481,11 @@
 			}
 			function addMetadataField(id) { const key = prompt('Field name')?.trim(); if (!key || unsafeKey(key)) return; const e = entity(id); if (Object.hasOwn(e.metadata, key)) { alert('This field already exists.'); return } e.metadata[key] = ''; save(); renderInspector() }
 			function deleteEntity(id) { const e = entity(id); if (!e) return; if (!confirm(`Delete “${e.name}” and its connections?`)) return; data.entities = data.entities.filter(x => x.id !== id); data.relationships = data.relationships.filter(r => r.source !== id && r.target !== id); selectedId = data.entities[0]?.id || null; layoutDirty = true; save(); render() }
+			function closeSidebar() { const app = $('.app'); app.classList.remove('side-open'); $('#sideToggle').setAttribute('aria-expanded', 'false') }
 			function bindClose() { $$('[data-close]').forEach(b => b.onclick = closeModal) }
 			function exportJson() { const blob = new Blob([JSON.stringify({ schema: 'threadline-network', version: 1, exportedAt: new Date().toISOString(), entities: data.entities, relationships: data.relationships }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'threadline-network.json'; a.click(); URL.revokeObjectURL(a.href) }
 			function importJson(file) { const reader = new FileReader(); reader.onload = () => { let next; try { const parsed = JSON.parse(reader.result); next = sanitize({ entities: parsed.entities || parsed.nodes, relationships: parsed.relationships || parsed.edges }) } catch (err) { return alert(`Could not import JSON: ${err.message}`) } if (!next) return alert('Could not import JSON: entities and relationships arrays are required.'); data = next; selectedId = data.entities[0]?.id || null; layoutDirty = true; save(); render(); alert(`Imported ${data.entities.length} entities and ${data.relationships.length} connections.`) }; reader.readAsText(file) }
-			$('#addEntityBtn').onclick = addEntity; $('#zoomIn').onclick = () => setZoom(graphZoom * 1.25); $('#zoomOut').onclick = () => setZoom(graphZoom / 1.25); $('#exportBtn').onclick = exportJson; $('#importBtn').onclick = () => $('#fileInput').click(); $('#fileInput').onchange = ev => { if (ev.target.files[0]) importJson(ev.target.files[0]); ev.target.value = '' }; $('#usecaseSelect').onchange = ev => { const value = ev.target.value; if (!value) return; confirmLoadUsecase(value); ev.target.value = currentUsecase; }; $('#layoutSelect').onchange = ev => { layoutMode = ev.target.value; layoutDirty = true; render(); save(); }; $$('.view-tab').forEach(b => b.onclick = () => setView(b.dataset.view)); $('#sideSearch').oninput = renderList; $('#globalSearch').oninput = () => { $('#sideSearch').value = $('#globalSearch').value; renderList(); const match = data.entities.find(e => e.name.toLowerCase().includes($('#globalSearch').value.toLowerCase())); if (match && $('#globalSearch').value) select(match.id) }; document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeModal(); if (ev.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { ev.preventDefault(); $('#globalSearch').focus() } }); $('#modalBackdrop').onclick = ev => { if (ev.target.id === 'modalBackdrop') closeModal() }; window.addEventListener('resize', () => { renderGraph(); if (mapInstance) mapInstance.invalidateSize() }); $('#usecaseSelect').value = currentUsecase; $('#layoutSelect').value = layoutMode; render();
+			$('#addEntityBtn').onclick = addEntity; $('#sideToggle').onclick = ev => { const open = $('.app').classList.toggle('side-open'); ev.currentTarget.setAttribute('aria-expanded', String(open)) }; $('#zoomIn').onclick = () => setZoom(graphZoom * 1.25); $('#zoomOut').onclick = () => setZoom(graphZoom / 1.25); $('#exportBtn').onclick = exportJson; $('#importBtn').onclick = () => $('#fileInput').click(); $('#fileInput').onchange = ev => { if (ev.target.files[0]) importJson(ev.target.files[0]); ev.target.value = '' }; $('#usecaseSelect').onchange = ev => { const value = ev.target.value; if (!value) return; confirmLoadUsecase(value); ev.target.value = currentUsecase; }; $('#layoutSelect').onchange = ev => { layoutMode = ev.target.value; layoutDirty = true; render(); save(); }; $$('.view-tab').forEach(b => b.onclick = () => setView(b.dataset.view)); $('#sideSearch').oninput = renderList; $('#globalSearch').oninput = () => { $('#sideSearch').value = $('#globalSearch').value; renderList(); const match = data.entities.find(e => e.name.toLowerCase().includes($('#globalSearch').value.toLowerCase())); if (match && $('#globalSearch').value) select(match.id) }; document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { closeModal(); closeSidebar() } if (ev.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { ev.preventDefault(); $('#globalSearch').focus() } }); $('#modalBackdrop').onclick = ev => { if (ev.target.id === 'modalBackdrop') closeModal() }; window.addEventListener('resize', () => { renderGraph(); if (mapInstance) mapInstance.invalidateSize() }); $('#usecaseSelect').value = currentUsecase; $('#layoutSelect').value = layoutMode; render();
 		})();
 	</script>
 </body>
